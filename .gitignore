@@ -1,5 +1,7 @@
 .idea/
 .venv/
 .mypy_cache/
+src/data
 __pycache__/
 *.pyc
+
