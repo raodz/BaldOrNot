@@ -1,18 +1,11 @@
+from dataclasses import asdict
+
 import pytest
 import tensorflow as tf
+
+from src.config import BoldOrNotConfig, ModelParams
 from src.model import BaldOrNotModel
 from src.constants import IMG_LEN, NUM_CHANNELS
-
-
-@pytest.fixture
-def model() -> BaldOrNotModel:
-    """
-    Fixture for creating an instance of the BaldOrNotModel.
-
-    Returns:
-        BaldOrNotModel: An instance of the BaldOrNotModel class.
-    """
-    return BaldOrNotModel()
 
 
 def test_model_creation(model: BaldOrNotModel) -> None:
@@ -58,13 +51,12 @@ def test_model_structure(model: BaldOrNotModel) -> None:
     expected_layers = [layer for layer in expected_layers if layer is not None]
 
     assert (
-        layers == expected_layers
+            layers == expected_layers
     ), f"Expected layers: {expected_layers}, but got: {layers}"
 
 
-
 @pytest.mark.parametrize("freeze_backbone", [True, False])
-def test_model_trainability(freeze_backbone: bool) -> None:
+def test_model_trainability(freeze_backbone: bool, test_config) -> None:
     """
     Test the trainability of the model's layers based on the freeze_backbone
     parameter.
@@ -76,13 +68,14 @@ def test_model_trainability(freeze_backbone: bool) -> None:
         bool: True if the trainability of the layers is correct,
         False otherwise.
     """
-    model = BaldOrNotModel(freeze_backbone=freeze_backbone)
+    args: ModelParams = test_config.model_params
+    args.freeze_backbone = freeze_backbone
+    model = BaldOrNotModel(**asdict(args))
 
     assert model.backbone.trainable is not freeze_backbone
 
     for layer in model.classifier.layers:
         assert layer.trainable
-
 
 
 @pytest.mark.parametrize(
@@ -92,9 +85,9 @@ def test_model_trainability(freeze_backbone: bool) -> None:
         (0.5, True),
     ],
 )
-def test_dropout_possibility(
-    dropout_rate: float | None, should_contain_dropout: bool
-) -> None:
+def test_dropout_possibility(test_config: BoldOrNotConfig,
+                             dropout_rate: float | None, should_contain_dropout: bool
+                             ) -> None:
     """
     Test the presence of a Dropout layer in the model based on the dropout_rate
     parameter.
@@ -109,9 +102,10 @@ def test_dropout_possibility(
         bool: True if the model contains a Dropout layer when expected,
         False otherwise.
     """
-    model = BaldOrNotModel(dropout_rate=dropout_rate)
+    args: ModelParams = test_config.model_params
+    args.dropout_rate = dropout_rate
+    model = BaldOrNotModel(**asdict(args))
     model.build(input_shape=(None, IMG_LEN, IMG_LEN, NUM_CHANNELS))
-
 
     contains_dropout = any(
         isinstance(layer, tf.keras.layers.Dropout)
