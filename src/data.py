@@ -3,6 +3,8 @@ import cv2
 from typing import Tuple, List
 from sklearn.model_selection import train_test_split
 import pandas as pd
+import tensorflow as tf
+from src.config import BoldOrNotConfig
 
 
 def check_sample_images(directory: str) -> Tuple[List[str], int]:
@@ -99,3 +101,60 @@ def create_data_subsets(df: pd.DataFrame) -> None:
     train_df.to_csv("train.csv", index=False)
     val_df.to_csv("validation.csv", index=False)
     test_df.to_csv("test.csv", index=False)
+
+
+class BaldDataset(tf.keras.utils.Sequence):
+    """
+    Generates random image data for Keras models using TensorFlow tensors.
+
+    This dataset class simulates a dataset for training purposes, generating random images
+    with dimensions 224x224x3 and corresponding random binary labels.
+
+    Attributes:
+        num_samples (int): The total number of samples in the dataset.
+        batch_size (int): The number of samples per batch.
+        vector_dim (int): The dimensionality of the random vectors (unused in this context).
+        shuffle (bool): Whether to shuffle the dataset after each epoch.
+    """
+    def __init__(self, num_samples: int, batch_size: int = 10, vector_dim: int = 100, shuffle: bool = True):
+        self.num_samples = num_samples
+        self.batch_size = batch_size
+        self.vector_dim = vector_dim
+        self.shuffle = shuffle
+        self.on_epoch_end()
+
+    def __len__(self) -> int:
+        """
+            Returns the number of batches per epoch.
+
+            Returns:
+                int: Number of batches per epoch.
+        """
+        return int(tf.math.floor(self.num_samples / self.batch_size))
+
+    def __getitem__(self, index: int) -> Tuple[tf.Tensor, tf.Tensor]:
+        """
+        Generates one batch of data.
+
+        Args:
+            index (int): Index of the batch.
+
+        Returns:
+            Tuple[tf.Tensor, tf.Tensor]: A tuple containing a batch of images (X) and labels (y).
+        """
+        indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
+        X = tf.random.normal(shape=(len(indexes), 224, 224, 3))
+        y = tf.random.uniform(shape=(len(indexes), 1), minval=0, maxval=2, dtype=tf.int32)
+        return X, y
+
+    def on_epoch_end(self):
+        """
+            Updates indexes after each epoch, shuffling if necessary.
+
+            This function is called at the end of each epoch to shuffle the dataset if the shuffle attribute is set to True.
+        """
+        self.indexes = tf.range(self.num_samples)
+        if self.shuffle:
+            self.indexes = tf.random.shuffle(self.indexes)
+
+
