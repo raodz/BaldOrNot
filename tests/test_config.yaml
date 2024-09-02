@@ -10,7 +10,13 @@ training_params:
   loss_function: binary_crossentropy
 metrics:
 - accuracy
+callbacks:
+  - type: 'EarlyStopping'
+    args:
+      monitor: 'val_loss'
+      patience: 3
 paths:
   train_path: ''
   val_path: ''
   images_dir: ''
+
