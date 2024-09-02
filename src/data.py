@@ -116,12 +116,10 @@ class BaldDataset(tf.keras.utils.Sequence):
         vector_dim (int): The dimensionality of the random vectors (unused in this context).
         shuffle (bool): Whether to shuffle the dataset after each epoch.
     """
-    def __init__(self, num_samples: int, batch_size: int = 10, vector_dim: int = 100, shuffle: bool = True):
+    def __init__(self, num_samples: int = 100, batch_size: int = 10, vector_dim: int = 100):
         self.num_samples = num_samples
         self.batch_size = batch_size
         self.vector_dim = vector_dim
-        self.shuffle = shuffle
-        self.on_epoch_end()
 
     def __len__(self) -> int:
         """
@@ -147,14 +145,6 @@ class BaldDataset(tf.keras.utils.Sequence):
         y = tf.random.uniform(shape=(len(indexes), 1), minval=0, maxval=2, dtype=tf.int32)
         return X, y
 
-    def on_epoch_end(self):
-        """
-            Updates indexes after each epoch, shuffling if necessary.
 
-            This function is called at the end of each epoch to shuffle the dataset if the shuffle attribute is set to True.
-        """
-        self.indexes = tf.range(self.num_samples)
-        if self.shuffle:
-            self.indexes = tf.random.shuffle(self.indexes)
 
 
