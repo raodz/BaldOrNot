@@ -1,5 +1,3 @@
-import json
-from dataclasses import asdict
 import tensorflow as tf
 from src.data import BaldDataset
 from src.model import BaldOrNotModel
@@ -34,15 +32,15 @@ def train_model(config: BoldOrNotConfig):
         loss=config.training_params.loss_function,
         metrics=config.metrics
     )
+    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3)
 
-    model.fit(
+    history = model.fit(
         train_dataset,
-        epochs=config.training_params.epochs
+        epochs=config.training_params.epochs,
+        validation_data=train_dataset,
+        callbacks=[early_stopping]
     )
 
+    return history
 
-def run_experiment(config: BoldOrNotConfig):
-    print("Running experiment with the following configuration:")
-    print(json.dumps(asdict(config), indent=4))
-    print('Start training:')
-    train_model(config=config)
+
