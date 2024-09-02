@@ -17,11 +17,10 @@ def train_model(config: BoldOrNotConfig):
     Args:
         config (BoldOrNotConfig): The configuration object containing model, training, and path parameters.
     """
-    num_samples = 100
     vector_dim = config.model_params.dense_units
     batch_size = config.training_params.batch_size
 
-    train_dataset = BaldDataset(num_samples=num_samples, batch_size=batch_size, vector_dim=vector_dim)
+    train_dataset = BaldDataset(batch_size=batch_size, vector_dim=vector_dim)
 
     model = BaldOrNotModel(
                 dense_units=config.model_params.dense_units,
