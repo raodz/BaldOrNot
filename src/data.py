@@ -114,7 +114,6 @@ class BaldDataset(tf.keras.utils.Sequence):
         num_samples (int): The total number of samples in the dataset.
         batch_size (int): The number of samples per batch.
         vector_dim (int): The dimensionality of the random vectors (unused in this context).
-        shuffle (bool): Whether to shuffle the dataset after each epoch.
     """
     def __init__(self, num_samples: int = 100, batch_size: int = 10, vector_dim: int = 100):
         self.num_samples = num_samples
@@ -123,10 +122,10 @@ class BaldDataset(tf.keras.utils.Sequence):
 
     def __len__(self) -> int:
         """
-            Returns the number of batches per epoch.
+        Returns the number of batches per epoch.
 
-            Returns:
-                int: Number of batches per epoch.
+        Returns:
+            int: Number of batches per epoch.
         """
         return int(tf.math.floor(self.num_samples / self.batch_size))
 
@@ -140,11 +139,10 @@ class BaldDataset(tf.keras.utils.Sequence):
         Returns:
             Tuple[tf.Tensor, tf.Tensor]: A tuple containing a batch of images (X) and labels (y).
         """
-        indexes = self.indexes[index * self.batch_size:(index + 1) * self.batch_size]
+        indexes = tf.range(index * self.batch_size, (index + 1) * self.batch_size)
         X = tf.random.normal(shape=(len(indexes), 224, 224, 3))
         y = tf.random.uniform(shape=(len(indexes), 1), minval=0, maxval=2, dtype=tf.int32)
         return X, y
-
 
 
 
