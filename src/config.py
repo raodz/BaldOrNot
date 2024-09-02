@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field, asdict
-from typing import List, Dict
+from typing import List, Dict, Any
 
 @dataclass
 class ModelParams:
@@ -38,12 +38,12 @@ class Paths:
 class BoldOrNotConfig:
     model_params: ModelParams = field(default_factory=lambda: ModelParams())
     training_params: TrainingParams = field(default_factory=lambda: TrainingParams())
-    callbacks: List[Dict[str, any]] = field(default_factory=lambda: [
+    callbacks: List[Dict[str, Any]] = field(default_factory=lambda: [
         Callback(type="EarlyStopping",
                  args={
-                        "monitor": "val_loss",
-                        "patience": 5
-                    }).to_dict()
+                     "monitor": "val_loss",
+                     "patience": 5
+                 }).to_dict()
     ])
     metrics: List[str] = field(default_factory=lambda: ["accuracy"])
     paths: Paths = field(default_factory=lambda: Paths())
@@ -51,6 +51,12 @@ class BoldOrNotConfig:
     def __post_init__(self):
         self.model_params = ModelParams(**self.model_params) if isinstance(self.model_params, dict) else self.model_params
         self.training_params = TrainingParams(**self.training_params) if isinstance(self.training_params, dict) else self.training_params
-        # self.callbacks = [Callback(**params) for params in self.callbacks]
+        self.callbacks = [
+            Callback(**params).to_dict() if isinstance(params, dict) else params
+            for params in self.callbacks
+        ]
+        for callback in self.callbacks:
+            if 'args' not in callback:
+                callback['args'] = {}
         self.paths = Paths(**self.paths) if isinstance(self.paths, dict) else self.paths
 

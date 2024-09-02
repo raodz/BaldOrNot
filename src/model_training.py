@@ -32,13 +32,16 @@ def train_model(config: BoldOrNotConfig):
         loss=config.training_params.loss_function,
         metrics=config.metrics
     )
-    early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3)
+    tf_callbacks = []
+    for callback_dict in config.callbacks:
+        if callback_dict['type'] == "EarlyStopping":
+            tf_callbacks.append(tf.keras.callbacks.EarlyStopping(**callback_dict['args']))
 
     history = model.fit(
         train_dataset,
         epochs=config.training_params.epochs,
         validation_data=train_dataset,
-        callbacks=[early_stopping]
+        callbacks=tf_callbacks
     )
 
     return history
