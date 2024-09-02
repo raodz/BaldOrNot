@@ -43,6 +43,11 @@ class BoldOrNotConfig:
                  args={
                      "monitor": "val_loss",
                      "patience": 5
+                 }).to_dict(),
+        Callback(type="TensorBoard",
+                 args={
+                     "log_dir": "logs",
+                     "histogram_freq": 1
                  }).to_dict()
     ])
     metrics: List[str] = field(default_factory=lambda: ["accuracy"])

@@ -1,4 +1,5 @@
 import tensorflow as tf
+import os
 from src.data import BaldDataset
 from src.model import BaldOrNotModel
 from src.config import BoldOrNotConfig
@@ -36,6 +37,9 @@ def train_model(config: BoldOrNotConfig):
     for callback_dict in config.callbacks:
         if callback_dict['type'] == "EarlyStopping":
             tf_callbacks.append(tf.keras.callbacks.EarlyStopping(**callback_dict['args']))
+        elif callback_dict['type'] == "TensorBoard":
+            tf_callbacks.append(tf.keras.callbacks.TensorBoard(**callback_dict['args']))
+
 
     history = model.fit(
         train_dataset,
