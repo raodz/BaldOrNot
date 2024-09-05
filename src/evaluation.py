@@ -26,5 +26,11 @@ def evaluate_model(y_true, y_pred):
     return accuracy, precision, recall, f1
 
 
+def misclassifications(y_true, y_pred):
+    # First type
+    false_positives = np.where((y_pred == 1) & (y_true == 0))[0]
+    # Second type
+    false_negatives = np.where((y_pred == 0) & (y_true == 1))[0]
 
+    return false_positives, false_negatives
 
