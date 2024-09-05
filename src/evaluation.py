@@ -116,7 +116,7 @@ def plot_confusion_matrix(
         fmt="d",
         cmap="Blues",
         xticklabels=class_names,
-        yticklabels=class_names,
+        yticklabels=class_names
     )
     plt.title("Confusion Matrix")
     plt.xlabel("Predicted Labels")
