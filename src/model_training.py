@@ -22,32 +22,35 @@ def train_model(config: BoldOrNotConfig):
     train_dataset = BaldDataset(batch_size=batch_size, vector_dim=vector_dim)
 
     model = BaldOrNotModel(
-                dense_units=config.model_params.dense_units,
-                freeze_backbone=config.model_params.freeze_backbone,
-                dropout_rate=config.model_params.dropout_rate
-            )
-    optimizer = tf.keras.optimizers.Adam(learning_rate=config.training_params.learning_rate)
+        dense_units=config.model_params.dense_units,
+        freeze_backbone=config.model_params.freeze_backbone,
+        dropout_rate=config.model_params.dropout_rate,
+    )
+    optimizer = tf.keras.optimizers.Adam(
+        learning_rate=config.training_params.learning_rate
+    )
 
     model.compile(
         optimizer=optimizer,
         loss=config.training_params.loss_function,
-        metrics=config.metrics
+        metrics=config.metrics,
     )
     tf_callbacks = []
     for callback_dict in config.callbacks:
-        if callback_dict['type'] == "EarlyStopping":
-            tf_callbacks.append(tf.keras.callbacks.EarlyStopping(**callback_dict['args']))
-        elif callback_dict['type'] == "TensorBoard":
-            tf_callbacks.append(tf.keras.callbacks.TensorBoard(**callback_dict['args']))
-
+        if callback_dict["type"] == "EarlyStopping":
+            tf_callbacks.append(
+                tf.keras.callbacks.EarlyStopping(**callback_dict["args"])
+            )
+        elif callback_dict["type"] == "TensorBoard":
+            tf_callbacks.append(
+                tf.keras.callbacks.TensorBoard(**callback_dict["args"])
+            )
 
     history = model.fit(
         train_dataset,
         epochs=config.training_params.epochs,
         validation_data=train_dataset,
-        callbacks=tf_callbacks
+        callbacks=tf_callbacks,
     )
 
     return history
-
-
