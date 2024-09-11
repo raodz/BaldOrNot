@@ -1,14 +1,18 @@
+from dataclasses import asdict
+from datetime import datetime
+
 import tensorflow as tf
 import os
 import logging
 
-# from tensorflow.keras.utils import plot_model
+from src.constants import LOG_FILE_NAME
 from src.data import BaldDataset
+from src.logging import check_if_log_exists
 from src.model import BaldOrNotModel
-from src.config import BoldOrNotConfig
+from src.config_class import BoldOrNotConfig
 
 
-def train_model(config: BoldOrNotConfig, training_dir: str):
+def train_model(config: BoldOrNotConfig, output_dir_path: str):
     """
     Trains the BaldOrNot model using the specified configuration.
 
@@ -21,6 +25,12 @@ def train_model(config: BoldOrNotConfig, training_dir: str):
         config (BoldOrNotConfig): The configuration object containing model,
         training, and path parameters.
     """
+    if not check_if_log_exists(output_dir_path):
+        raise RuntimeError(
+            "Log file '{}' not found in '{}'. Make sure logging "
+            "is initialized.".format(LOG_FILE_NAME, output_dir_path)
+        )
+
     logging.info("Starting model training...")
 
     vector_dim = config.model_params.dense_units
@@ -34,22 +44,13 @@ def train_model(config: BoldOrNotConfig, training_dir: str):
 
     train_dataset = BaldDataset(batch_size=batch_size, vector_dim=vector_dim)
     logging.info(
-        f"Training dataset initialized with batch size {batch_size} "
+        f"Training dataset initialized with batch size {batch_size}"
         f"and vector dim {vector_dim}"
     )
 
     # Initialize model
-    model = BaldOrNotModel(
-        dense_units=config.model_params.dense_units,
-        freeze_backbone=config.model_params.freeze_backbone,
-        dropout_rate=config.model_params.dropout_rate,
-    )
-    logging.info(
-        f"Model initialized with dense_units: "
-        f"{config.model_params.dense_units}, "
-        f"freeze_backbone: {config.model_params.freeze_backbone}, "
-        f"dropout_rate: {config.model_params.dropout_rate}"
-    )
+    model = BaldOrNotModel(**asdict(config.model_params))
+    logging.info("Model initialized")
 
     # Compile model
     optimizer = tf.keras.optimizers.Adam(
@@ -98,13 +99,24 @@ def train_model(config: BoldOrNotConfig, training_dir: str):
     logging.info("Model training completed")
 
     # Save model and plot
-    model_path = os.path.join(training_dir, "model.keras")
+    model_path = os.path.join(
+        output_dir_path, config.model_params.saved_model_name
+    )
     model.save(model_path)
     logging.info(f"Model saved at {model_path}")
 
-    # plot_path = os.path.join(training_dir, 'model_plot.png')
+    # plot_path = os.path.join(output_dir, 'model_plot.png')
     # plot_model(model, to_file=plot_path, show_shapes=True,
     #            show_layer_names=True)
     # logging.info(f"Model plot saved at {plot_path}")
 
     return history
+
+
+def init_output_dir():
+    project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    current_training = f"training{current_date}"
+    output_dir_path = os.path.join(project_path, "trainings", current_training)
+    os.makedirs(output_dir_path, exist_ok=True)
+    return output_dir_path

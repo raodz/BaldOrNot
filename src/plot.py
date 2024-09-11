@@ -1,10 +1,14 @@
+import logging
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import cv2
 from typing import List, Dict
 
-from src.constants import BALD_LABELS
+from keras.src.callbacks import History
+
+from src.constants import BALD_LABELS, LOG_FILE_NAME
+from src.logging import check_if_log_exists
 
 
 def display_sample_images(df: pd.DataFrame, dir_path: str) -> None:
@@ -89,52 +93,45 @@ def plot_proportions(
     plt.show()
 
 
-def plot_training_curves(history, training_dir):
+def plot_metric_curve(
+    history: History, metric: str, output_dir_path: str
+) -> None:
     """
-    Saves plots of the training curves (loss and other metrics) based on the
-    training history.
+    Plots and saves the curve for a given metric.
 
     Args:
         history (History): History object returned by `model.fit()`.
-        training_dir (str): Path to the directory where the plot will be saved.
+        metric (str): The name of the metric to plot (e.g., 'loss',
+        'accuracy').
+        output_dir_path (str): Path to the directory where the plot will be
+        saved.
     """
-    # Create plot for loss and other metrics
     plt.figure(figsize=(10, 5))
+    plt.plot(
+        history.history[metric], label=f"{metric.capitalize()} (training)"
+    )
 
-    # Plot for loss
-    plt.plot(history.history["loss"], label="Loss (training)")
-    if "val_loss" in history.history:
-        plt.plot(history.history["val_loss"], label="Loss (validation)")
+    val_metric = f"val_{metric}"
+    if val_metric in history.history:
+        plt.plot(
+            history.history[val_metric],
+            label=f"{metric.capitalize()} (validation)",
+        )
 
     # Add title, legend, and axis labels
-    plt.title("Loss Curves")
+    plt.title(f"{metric.capitalize()} Curves")
     plt.xlabel("Epoch")
-    plt.ylabel("Loss")
+    plt.ylabel(metric.capitalize())
     plt.legend()
 
     # Save the plot as a PNG file
-    loss_plot_path = os.path.join(training_dir, "loss_plot.png")
-    plt.savefig(loss_plot_path)
+    plot_path = os.path.join(output_dir_path, f"{metric}_plot.png")
+    plt.savefig(plot_path)
     plt.close()
 
-    # If accuracy is available, plot accuracy as well
-    if "accuracy" in history.history:
-        plt.figure(figsize=(10, 5))
-        plt.plot(history.history["accuracy"], label="Accuracy (training)")
-        if "val_accuracy" in history.history:
-            plt.plot(
-                history.history["val_accuracy"], label="Accuracy (validation)"
-            )
-
-        # Add title, legend, and axis labels
-        plt.title("Accuracy Curves")
-        plt.xlabel("Epoch")
-        plt.ylabel("Accuracy")
-        plt.legend()
-
-        # Save the plot as a PNG file
-        acc_plot_path = os.path.join(training_dir, "accuracy_plot.png")
-        plt.savefig(acc_plot_path)
-        plt.close()
-
-    print(f"Training curves saved in directory: {training_dir}")
+    if not check_if_log_exists(output_dir_path):
+        raise RuntimeError(
+            "Log file '{}' not found in '{}'. Make sure logging "
+            "is initialized.".format(LOG_FILE_NAME, output_dir_path)
+        )
+    logging.info(f"Plot for {metric} saved at: {plot_path}")
