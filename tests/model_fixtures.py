@@ -3,7 +3,7 @@ from dataclasses import asdict
 import pytest
 import yaml
 
-from src.config import BoldOrNotConfig
+from src.config_class import BoldOrNotConfig
 from src.model import BaldOrNotModel
 
 

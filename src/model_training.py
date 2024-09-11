@@ -1,53 +1,122 @@
+from dataclasses import asdict
+from datetime import datetime
+
 import tensorflow as tf
 import os
+import logging
+
+from src.constants import LOG_FILE_NAME
 from src.data import BaldDataset
+from src.logging import check_if_log_exists
 from src.model import BaldOrNotModel
-from src.config import BoldOrNotConfig
+from src.config_class import BoldOrNotConfig
 
 
-def train_model(config: BoldOrNotConfig):
+def train_model(config: BoldOrNotConfig, output_dir_path: str):
     """
     Trains the BaldOrNot model using the specified configuration.
 
-    This function initializes the dataset, constructs the model, compiles it with the specified
-    optimizer, loss function, and metrics, and then trains the model on the dataset for the
-    number of epochs defined in the configuration.
+    This function initializes the dataset, constructs the model, compiles it
+    with the specified optimizer, loss function, and metrics, and then trains
+    the model on the dataset for the number of epochs defined in the
+    configuration.
 
     Args:
-        config (BoldOrNotConfig): The configuration object containing model, training, and path parameters.
+        config (BoldOrNotConfig): The configuration object containing model,
+        training, and path parameters.
     """
+    if not check_if_log_exists(output_dir_path):
+        raise RuntimeError(
+            "Log file '{}' not found in '{}'. Make sure logging "
+            "is initialized.".format(LOG_FILE_NAME, output_dir_path)
+        )
+
+    logging.info("Starting model training...")
+
     vector_dim = config.model_params.dense_units
     batch_size = config.training_params.batch_size
 
+    # Log model parameters
+    logging.info(
+        f"Model configuration: Dense units: {vector_dim}, "
+        f"Batch size: {batch_size}"
+    )
+
     train_dataset = BaldDataset(batch_size=batch_size, vector_dim=vector_dim)
+    logging.info(
+        f"Training dataset initialized with batch size {batch_size}"
+        f"and vector dim {vector_dim}"
+    )
 
-    model = BaldOrNotModel(
-                dense_units=config.model_params.dense_units,
-                freeze_backbone=config.model_params.freeze_backbone,
-                dropout_rate=config.model_params.dropout_rate
-            )
-    optimizer = tf.keras.optimizers.Adam(learning_rate=config.training_params.learning_rate)
+    # Initialize model
+    model = BaldOrNotModel(**asdict(config.model_params))
+    logging.info("Model initialized")
 
+    # Compile model
+    optimizer = tf.keras.optimizers.Adam(
+        learning_rate=config.training_params.learning_rate
+    )
     model.compile(
         optimizer=optimizer,
         loss=config.training_params.loss_function,
-        metrics=config.metrics
+        metrics=config.metrics,
     )
+    logging.info(
+        f"Model compiled with Adam optimizer and learning rate "
+        f"{config.training_params.learning_rate}"
+    )
+
+    # Initialize callbacks
     tf_callbacks = []
     for callback_dict in config.callbacks:
-        if callback_dict['type'] == "EarlyStopping":
-            tf_callbacks.append(tf.keras.callbacks.EarlyStopping(**callback_dict['args']))
-        elif callback_dict['type'] == "TensorBoard":
-            tf_callbacks.append(tf.keras.callbacks.TensorBoard(**callback_dict['args']))
+        if callback_dict["type"] == "EarlyStopping":
+            tf_callbacks.append(
+                tf.keras.callbacks.EarlyStopping(**callback_dict["args"])
+            )
+            logging.info(
+                f"EarlyStopping callback added with parameters: "
+                f"{callback_dict['args']}"
+            )
+        elif callback_dict["type"] == "TensorBoard":
+            tf_callbacks.append(
+                tf.keras.callbacks.TensorBoard(**callback_dict["args"])
+            )
+            logging.info(
+                f"TensorBoard callback added with parameters: "
+                f"{callback_dict['args']}"
+            )
 
-
+    # Train the model
+    logging.info(
+        f"Starting training for {config.training_params.epochs} epochs"
+    )
     history = model.fit(
         train_dataset,
         epochs=config.training_params.epochs,
         validation_data=train_dataset,
-        callbacks=tf_callbacks
+        callbacks=tf_callbacks,
     )
+    logging.info("Model training completed")
+
+    # Save model and plot
+    model_path = os.path.join(
+        output_dir_path, config.model_params.saved_model_name
+    )
+    model.save(model_path)
+    logging.info(f"Model saved at {model_path}")
+
+    # plot_path = os.path.join(output_dir, 'model_plot.png')
+    # plot_model(model, to_file=plot_path, show_shapes=True,
+    #            show_layer_names=True)
+    # logging.info(f"Model plot saved at {plot_path}")
 
     return history
 
 
+def init_output_dir():
+    project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    current_training = f"training{current_date}"
+    output_dir_path = os.path.join(project_path, "trainings", current_training)
+    os.makedirs(output_dir_path, exist_ok=True)
+    return output_dir_path
