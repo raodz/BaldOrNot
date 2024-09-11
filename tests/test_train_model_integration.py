@@ -26,3 +26,13 @@ def test_tensorboard_logs_saving(test_config: BoldOrNotConfig) -> None:
     assert len(log_files) > 0, "Log directory is empty"
 
     shutil.rmtree(log_dir)
+
+
+def test_early_stopping(test_config: BoldOrNotConfig) -> None:
+    history = train_model(config=test_config)
+    early_stopping_patience = 3
+    val_loss_history = history.history['val_loss']
+    best_epoch = val_loss_history.index(min(val_loss_history))
+    num_epochs_trained = len(history.epoch)
+
+    assert num_epochs_trained - best_epoch - 1 == early_stopping_patience
