@@ -7,15 +7,17 @@ class ModelParams:
     dense_units: int = 512
     freeze_backbone: bool = True
     dropout_rate: float = 0.5
+    saved_model_name = "model.keras"
 
 
 @dataclass
 class TrainingParams:
-    epochs: int = 10
+    epochs: int = 2
     batch_size: int = 32
     learning_rate: float = 0.001
     optimizer: str = "adam"
     loss_function: str = "binary_crossentropy"
+    training_name: str = "training_name"
 
 
 @dataclass
@@ -49,7 +51,7 @@ class BoldOrNotConfig:
             ).to_dict(),
             Callback(
                 type="TensorBoard",
-                args={"log_dir": "tensorboard_logs", "histogram_freq": 1},
+                args={"log_dir": "logs", "histogram_freq": 1},
             ).to_dict(),
         ]
     )
