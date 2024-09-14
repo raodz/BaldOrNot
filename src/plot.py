@@ -94,39 +94,39 @@ def plot_proportions(
 
 @check_log_exists_decorator
 def plot_metric_curve(
-    history: History, metric: str, output_dir_path: str
+    history: History, metric_name: str, output_dir_path: str
 ) -> None:
     """
     Plots and saves the curve for a given metric.
 
     Args:
         history (History): History object returned by `model.fit()`.
-        metric (str): The name of the metric to plot (e.g., 'loss',
+        metric_name (str): The name of the metric to plot (e.g., 'loss',
         'accuracy').
         output_dir_path (str): Path to the directory where the plot will be
         saved.
     """
     plt.figure(figsize=(10, 5))
     plt.plot(
-        history.history[metric], label=f"{metric.capitalize()} (training)"
+        history.history[metric_name], label=f"{metric_name.capitalize()} (training)"
     )
 
-    val_metric = f"val_{metric}"
+    val_metric = f"val_{metric_name}"
     if val_metric in history.history:
         plt.plot(
             history.history[val_metric],
-            label=f"{metric.capitalize()} (validation)",
+            label=f"{metric_name.capitalize()} (validation)",
         )
 
     # Add title, legend, and axis labels
-    plt.title(f"{metric.capitalize()} Curves")
+    plt.title(f"{metric_name.capitalize()} Curves")
     plt.xlabel("Epoch")
-    plt.ylabel(metric.capitalize())
+    plt.ylabel(metric_name.capitalize())
     plt.legend()
 
     # Save the plot as a PNG file
-    plot_path = os.path.join(output_dir_path, f"{metric}_plot.png")
+    plot_path = os.path.join(output_dir_path, f"{metric_name}_plot.png")
     plt.savefig(plot_path)
     plt.close()
 
-    logging.info(f"Plot for {metric} saved at: {plot_path}")
+    logging.info(f"Plot for {metric_name} saved at: {plot_path}")
