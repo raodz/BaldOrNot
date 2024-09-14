@@ -7,9 +7,8 @@ from typing import List, Dict
 
 from keras.src.callbacks import History
 
-from src.constants import BALD_LABELS, LOG_FILE_NAME
-from src.logging import check_if_log_exists
-
+from src.constants import BALD_LABELS
+from utils import check_log_exists_decorator
 
 def display_sample_images(df: pd.DataFrame, dir_path: str) -> None:
     """
@@ -93,6 +92,7 @@ def plot_proportions(
     plt.show()
 
 
+@check_log_exists_decorator
 def plot_metric_curve(
     history: History, metric: str, output_dir_path: str
 ) -> None:
@@ -129,9 +129,4 @@ def plot_metric_curve(
     plt.savefig(plot_path)
     plt.close()
 
-    if not check_if_log_exists(output_dir_path):
-        raise RuntimeError(
-            "Log file '{}' not found in '{}'. Make sure logging "
-            "is initialized.".format(LOG_FILE_NAME, output_dir_path)
-        )
     logging.info(f"Plot for {metric} saved at: {plot_path}")

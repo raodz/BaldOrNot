@@ -5,13 +5,13 @@ import tensorflow as tf
 import os
 import logging
 
-from src.constants import LOG_FILE_NAME
 from src.data import BaldDataset
-from src.logging import check_if_log_exists
 from src.model import BaldOrNotModel
 from src.config_class import BoldOrNotConfig
+from utils import check_log_exists_decorator
 
 
+@check_log_exists_decorator
 def train_model(config: BoldOrNotConfig, output_dir_path: str):
     """
     Trains the BaldOrNot model using the specified configuration.
@@ -25,11 +25,6 @@ def train_model(config: BoldOrNotConfig, output_dir_path: str):
         config (BoldOrNotConfig): The configuration object containing model,
         training, and path parameters.
     """
-    if not check_if_log_exists(output_dir_path):
-        raise RuntimeError(
-            "Log file '{}' not found in '{}'. Make sure logging "
-            "is initialized.".format(LOG_FILE_NAME, output_dir_path)
-        )
 
     logging.info("Starting model training...")
 

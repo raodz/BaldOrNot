@@ -34,16 +34,3 @@ def setup_logging(training_dir):
 
     logging.info(f"Logging initialized. Logs will be saved to {log_file}")
 
-
-def check_if_log_exists(output_dir_path: str) -> bool:
-    """
-    Checks if the log file exists in the given directory.
-
-    Args:
-        output_dir_path (str): Path to the directory to check.
-
-    Returns:
-        bool: True if the log file exists, False otherwise.
-    """
-    log_file_path = os.path.join(output_dir_path, LOG_FILE_NAME)
-    return os.path.isfile(log_file_path)
