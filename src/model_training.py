@@ -8,7 +8,7 @@ import logging
 from src.data import BaldDataset
 from src.model import BaldOrNotModel
 from src.config_class import BoldOrNotConfig
-from utils import check_log_exists_decorator
+from src.utils import check_log_exists_decorator
 
 
 @check_log_exists_decorator
