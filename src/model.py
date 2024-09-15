@@ -1,5 +1,5 @@
 import tensorflow as tf
-from src.constants import IMG_LEN, NUM_CHANNELS
+from src.constants import IMG_LEN, N_CHANNELS_RGB
 
 
 class BaldOrNotModel(tf.keras.Model):
@@ -28,7 +28,7 @@ class BaldOrNotModel(tf.keras.Model):
     ):
         super().__init__()
         self.backbone: tf.keras.Model = tf.keras.applications.ConvNeXtTiny(
-            include_top=False, input_shape=(IMG_LEN, IMG_LEN, NUM_CHANNELS)
+            include_top=False, input_shape=(IMG_LEN, IMG_LEN, N_CHANNELS_RGB)
         )
         if freeze_backbone:
             self.backbone.trainable = False

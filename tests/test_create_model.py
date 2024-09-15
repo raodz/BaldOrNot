@@ -5,7 +5,7 @@ import tensorflow as tf
 
 from src.config_class import BoldOrNotConfig, ModelParams
 from src.model import BaldOrNotModel
-from src.constants import IMG_LEN, NUM_CHANNELS
+from src.constants import IMG_LEN, N_CHANNELS_RGB
 
 
 def test_model_creation(model: BaldOrNotModel) -> None:
@@ -158,7 +158,7 @@ def test_classifier_input_compatibility(model: BaldOrNotModel) -> None:
         bool: True if the classifier accepts the correct input tensor shape,
         False otherwise.
     """
-    input_tensor = tf.random.uniform((1, IMG_LEN, IMG_LEN, NUM_CHANNELS))
+    input_tensor = tf.random.uniform((1, IMG_LEN, IMG_LEN, N_CHANNELS_RGB))
 
     backbone_output = model.backbone(input_tensor)
 
