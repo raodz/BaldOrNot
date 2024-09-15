@@ -103,10 +103,10 @@ def train_model(config: BoldOrNotConfig, output_dir_path: str):
     return history
 
 
-def init_output_dir():
+def init_output_dir(training_name: str) -> str:
     project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    current_training = f"training{current_date}"
+    current_training = f"{training_name}{current_date}"
     output_dir_path = os.path.join(project_path, "trainings", current_training)
     os.makedirs(output_dir_path, exist_ok=True)
     return output_dir_path

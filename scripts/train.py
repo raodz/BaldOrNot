@@ -12,7 +12,7 @@ from src.plot import plot_metric_curve
 
 def run_experiment(config: BoldOrNotConfig):
     logging.info("Initializing output directory...")
-    output_dir_path = init_output_dir()
+    output_dir_path = init_output_dir(config.training_params.training_name)
 
     logging.info("Setting up logging...")
     setup_logging(output_dir_path)
