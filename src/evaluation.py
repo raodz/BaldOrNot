@@ -41,7 +41,7 @@ def make_predictions(model, dataset) -> tuple[np.ndarray, np.ndarray]:
 
 def evaluate_model(
     y_true: np.ndarray, y_pred: np.ndarray
-) -> tuple[float, float, float, float]:
+) -> dict[str: float, str: float, str:float, str:float]:
     """
     Evaluates the model performance by calculating various metrics.
 
@@ -61,7 +61,10 @@ def evaluate_model(
     recall = recall_score(y_true, y_pred, average="weighted")
     f1 = f1_score(y_true, y_pred, average="weighted")
 
-    return accuracy, precision, recall, f1
+    return {'accuracy': accuracy,
+            'precision': precision,
+            'recall': recall,
+            'f1_score': f1}
 
 
 def misclassifications(
