@@ -3,14 +3,24 @@ model_params:
   freeze_backbone: true
   dropout_rate: 0.5
 training_params:
-  epochs: 2
+  epochs: 5
   batch_size: 32
   learning_rate: 0.001
   optimizer: adam
   loss_function: binary_crossentropy
 metrics:
 - accuracy
+callbacks:
+  - type: 'EarlyStopping'
+    args:
+      monitor: 'val_loss'
+      patience: 3
+  - type: 'TensorBoard'
+    args:
+      "log_dir": "tensorboard_logs_test"
+      "histogram_freq": 1
 paths:
   train_path: ''
   val_path: ''
   images_dir: ''
+
