@@ -67,7 +67,7 @@ def evaluate_model(
             'f1_score': f1}
 
 
-def misclassifications(
+def get_misclassifications(
     y_true: np.ndarray, y_pred: np.ndarray
 ) -> tuple[np.ndarray, np.ndarray]:
     """
