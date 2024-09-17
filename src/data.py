@@ -5,7 +5,7 @@ import keras
 import pandas as pd
 from typing import List, Tuple
 from sklearn.model_selection import train_test_split
-from src.config import BaldOrNotConfig
+from src.config_class import BaldOrNotConfig
 from src.constants import (
     N_CHANNELS_RGB,
     N_CHANNELS_GRAYSCALE,
@@ -274,7 +274,7 @@ class BaldDataset(keras.utils.Sequence):
         )
 
     @staticmethod
-    def create_subset_dfs(  # problem
+    def create_subset_dfs(
         df: pd.DataFrame,
     ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         """

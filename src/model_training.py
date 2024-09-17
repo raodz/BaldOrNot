@@ -7,12 +7,12 @@ import logging
 
 from src.data import BaldDataset
 from src.model import BaldOrNotModel
-from src.config_class import BoldOrNotConfig
+from src.config_class import BaldOrNotConfig
 from src.utils import check_log_exists_decorator
 
 
 @check_log_exists_decorator
-def train_model(config: BoldOrNotConfig, output_dir_path: str):
+def train_model(config: BaldOrNotConfig, output_dir_path: str):
     """
     Trains the BaldOrNot model using the specified configuration.
 
@@ -22,7 +22,7 @@ def train_model(config: BoldOrNotConfig, output_dir_path: str):
     configuration.
 
     Args:
-        config (BoldOrNotConfig): The configuration object containing model,
+        config (BaldOrNotConfig): The configuration object containing model,
         training, and path parameters.
     """
 
@@ -37,11 +37,8 @@ def train_model(config: BoldOrNotConfig, output_dir_path: str):
         f"Batch size: {batch_size}"
     )
 
-    train_dataset = BaldDataset(batch_size=batch_size, vector_dim=vector_dim)
-    logging.info(
-        f"Training dataset initialized with batch size {batch_size}"
-        f"and vector dim {vector_dim}"
-    )
+    train_dataset = BaldDataset(batch_size=batch_size)
+    logging.info(f"Training dataset initialized with batch size {batch_size}")
 
     # Initialize model
     model = BaldOrNotModel(**asdict(config.model_params))

@@ -8,7 +8,8 @@ from typing import List, Dict
 from keras.src.callbacks import History
 
 from src.constants import BALD_LABELS
-from utils import check_log_exists_decorator
+from src.utils import check_log_exists_decorator
+
 
 def display_sample_images(df: pd.DataFrame, dir_path: str) -> None:
     """
@@ -108,7 +109,8 @@ def plot_metric_curve(
     """
     plt.figure(figsize=(10, 5))
     plt.plot(
-        history.history[metric_name], label=f"{metric_name.capitalize()} (training)"
+        history.history[metric_name],
+        label=f"{metric_name.capitalize()} (training)",
     )
 
     val_metric = f"val_{metric_name}"

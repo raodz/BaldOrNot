@@ -38,7 +38,7 @@ class Paths:
 
 
 @dataclass
-class BoldOrNotConfig:
+class BaldOrNotConfig:
     model_params: ModelParams = field(default_factory=lambda: ModelParams())
     training_params: TrainingParams = field(
         default_factory=lambda: TrainingParams()
