@@ -1,7 +1,5 @@
 from dataclasses import asdict
 from datetime import datetime
-
-import pandas as pd
 import tensorflow as tf
 import os
 import logging
@@ -10,8 +8,7 @@ from src.data import BaldDataset
 from src.model import BaldOrNotModel
 from src.config_class import BaldOrNotConfig
 from src.utils import check_log_exists_decorator
-from src.evaluation import make_predictions, evaluate_model, drop_confusion_matrix
-from src.constants import BALD_LABELS
+from src.evaluation import evaluate_and_save_results
 
 
 @check_log_exists_decorator
@@ -52,9 +49,11 @@ def train_model(config: BaldOrNotConfig, output_dir_path: str):
         f"Batch size: {batch_size}"
     )
 
-    train_dataset = BaldDataset(df=train_df, batch_size=batch_size)
-    val_dataset = BaldDataset(df=val_df, batch_size=batch_size)
-    test_dataset = BaldDataset(df=test_df, batch_size=batch_size)
+    datasets = {
+        'train': BaldDataset(df=train_df, batch_size=batch_size),
+        'val': BaldDataset(df=val_df, batch_size=batch_size),
+        'test': BaldDataset(df=test_df, batch_size=batch_size)
+    }
 
     logging.info(
         f"Datasets initialized with batch size {batch_size}"
@@ -105,28 +104,17 @@ def train_model(config: BaldOrNotConfig, output_dir_path: str):
         f"Starting training for {config.training_params.epochs} epochs"
     )
     history = model.fit(
-        train_dataset,
+        datasets['train'],
         epochs=config.training_params.epochs,
-        validation_data=val_dataset,
+        validation_data=datasets['val'],
         callbacks=tf_callbacks,
     )
     logging.info("Model training completed")
 
-    y_true_val, y_pred_val = make_predictions(model, val_dataset)
-    metrics_val = evaluate_model(y_true_val, y_pred_val)
-
-    logging.info("Results of evaluation based on validation data:")
-    for metric, value in metrics_val.items():
-        if metric == 'conf_matrix':
-            logging.info(f"{metric}:\n{value}")
-        else:
-            logging.info(f"{metric}: {value:.4f}")
-    drop_confusion_matrix(
-        metrics_val['conf_matrix'],
-        class_names=BALD_LABELS,
-        output_path=os.path.join(output_dir_path, 'val_confusion_matrix.png')
-    )
-
+    for dataset_name, dataset in datasets.items():
+        evaluate_and_save_results(
+            model, dataset, dataset_name, output_dir_path
+        )
 
     # Save model and plot
     model_path = os.path.join(
