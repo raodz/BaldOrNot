@@ -24,6 +24,7 @@ def train_model(config: BaldOrNotConfig, output_dir_path: str):
     Args:
         config (BoldOrNotConfig): The configuration object containing model,
         training, and path parameters.
+        output_dir_path: The dir path, where is saved model and metrics.
     """
     logging.info("Preparing data...")
     merged_df = BaldDataset.prepare_merged_dataframe(
