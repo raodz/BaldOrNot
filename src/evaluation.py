@@ -12,6 +12,7 @@ from sklearn.metrics import (
     confusion_matrix,
 )
 from src.constants import BALD_LABELS
+from src.utils import check_log_exists_decorator
 
 
 def make_predictions(model, dataset) -> tuple[np.ndarray, np.ndarray]:
@@ -129,7 +130,7 @@ def drop_confusion_matrix(
     plt.close()
     logging.info(f"Confusion matrix saved to {output_path}")
 
-
+@check_log_exists_decorator
 def evaluate_and_save_results(model, dataset, dataset_name, output_dir_path):
 
     logging.info(f"Evaluating model on {dataset_name} set...")
