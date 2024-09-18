@@ -1,6 +1,7 @@
 from dataclasses import asdict
 from datetime import datetime
 
+import pandas as pd
 import tensorflow as tf
 import os
 import logging
@@ -25,6 +26,18 @@ def train_model(config: BaldOrNotConfig, output_dir_path: str):
         config (BoldOrNotConfig): The configuration object containing model,
         training, and path parameters.
     """
+    logging.info("Preparing data...")
+    merged_df = BaldDataset.prepare_merged_dataframe(
+        subsets_path=config.paths.subsets_path,
+        labels_path=config.paths.labels_path
+    )
+
+    train_df, val_df, test_df = BaldDataset.create_subset_dfs(merged_df)
+    logging.info(
+        f"Load train data: {len(train_df)} images,\n"
+        f"Load validation data: {len(val_df)} images,\n"
+        f"Load test data: {len(test_df)} images."
+    )
 
     logging.info("Starting model training...")
 
@@ -36,12 +49,12 @@ def train_model(config: BaldOrNotConfig, output_dir_path: str):
         f"Model configuration: Dense units: {vector_dim}, "
         f"Batch size: {batch_size}"
     )
-
-    train_dataset = BaldDataset(batch_size=batch_size, vector_dim=vector_dim)
+    train_dataset = BaldDataset(df=train_df, batch_size=batch_size)
     logging.info(
         f"Training dataset initialized with batch size {batch_size}"
         f"and vector dim {vector_dim}"
     )
+
 
     # Initialize model
     model = BaldOrNotModel(**asdict(config.model_params))
