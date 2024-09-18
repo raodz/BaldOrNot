@@ -7,12 +7,12 @@ import logging
 
 from src.data import BaldDataset
 from src.model import BaldOrNotModel
-from src.config_class import BoldOrNotConfig
+from src.config_class import BaldOrNotConfig
 from src.utils import check_log_exists_decorator
 
 
 @check_log_exists_decorator
-def train_model(config: BoldOrNotConfig, output_dir_path: str):
+def train_model(config: BaldOrNotConfig, output_dir_path: str):
     """
     Trains the BaldOrNot model using the specified configuration.
 
