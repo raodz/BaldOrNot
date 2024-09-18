@@ -13,22 +13,23 @@ from sklearn.metrics import (
 )
 from src.constants import BALD_LABELS
 from src.utils import check_log_exists_decorator
+from typing import Tuple, Dict, List
 
 
-def make_predictions(model, dataset) -> tuple[np.ndarray, np.ndarray]:
+def make_predictions(model: tf.keras.Model, dataset: tf.data.Dataset) -> Tuple[np.ndarray, np.ndarray]:
     """
-    Makes y_pred on the provided dataset and returns the true and
+    Makes predictions on the provided dataset and returns the true and
     predicted labels.
 
     Args:
-        model: The trained machine learning model used for making y_pred.
-        dataset: The dataset to make y_pred on. This should be an iterable
-            of (images, labels).
+        model (tf.keras.Model): The trained model used for making predictions.
+        dataset (tf.data.Dataset): The dataset to make predictions on.
+            This should be an iterable of (images, labels).
 
     Returns:
-        A tuple containing two numpy arrays:
-        - y_true: The true labels.
-        - y_pred: The predicted labels.
+        Tuple[np.ndarray, np.ndarray]: A tuple containing:
+            - y_true (np.ndarray): The true labels.
+            - y_pred (np.ndarray): The predicted labels.
     """
     images, y_true = zip(*dataset)
     images = np.concatenate(images, axis=0)
@@ -42,22 +43,21 @@ def make_predictions(model, dataset) -> tuple[np.ndarray, np.ndarray]:
     return y_true, y_pred
 
 
-def get_metrics(
-    y_true: np.ndarray, y_pred: np.ndarray
-) -> dict[str: float, str: float, str:float, str:float, str:np.ndarray]:
+def get_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float]:
     """
-    Evaluates the model performance by calculating various metrics.
+    Calculates various evaluation metrics based on the true and predicted labels.
 
     Args:
-        y_true: Array of true labels.
-        y_pred: Array of predicted labels.
+        y_true (np.ndarray): Array of true labels.
+        y_pred (np.ndarray): Array of predicted labels.
 
     Returns:
-        A tuple containing:
-        - accuracy: The accuracy score.
-        - precision: The precision score (weighted).
-        - recall: The recall score (weighted).
-        - f1: The F1 score (weighted).
+        Dict[str, float]: A dictionary containing:
+            - accuracy: Accuracy score.
+            - precision: Precision score (weighted).
+            - recall: Recall score (weighted).
+            - f1_score: F1 score (weighted).
+            - conf_matrix: Confusion matrix.
     """
     accuracy = accuracy_score(y_true, y_pred)
     precision = precision_score(y_true, y_pred, average="weighted")
@@ -65,28 +65,27 @@ def get_metrics(
     f1 = f1_score(y_true, y_pred, average="weighted")
     conf_matrix = confusion_matrix(y_true, y_pred)
 
-    return {'accuracy': accuracy,
-            'precision': precision,
-            'recall': recall,
-            'f1_score': f1,
-            'conf_matrix': conf_matrix}
+    return {
+        'accuracy': accuracy,
+        'precision': precision,
+        'recall': recall,
+        'f1_score': f1,
+        'conf_matrix': conf_matrix
+    }
 
 
-def get_misclassifications(
-    y_true: np.ndarray, y_pred: np.ndarray
-) -> tuple[np.ndarray, np.ndarray]:
+def get_misclassifications(y_true: np.ndarray, y_pred: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """
-    Identifies misclassifications by finding false positives
-    and false negatives.
+    Identifies misclassifications by finding false positives and false negatives.
 
     Args:
-        y_true: Array of true labels.
-        y_pred: Array of predicted labels.
+        y_true (np.ndarray): Array of true labels.
+        y_pred (np.ndarray): Array of predicted labels.
 
     Returns:
-        A tuple containing:
-        - false_positives: Indices where false positives occurred.
-        - false_negatives: Indices where false negatives occurred.
+        Tuple[np.ndarray, np.ndarray]: A tuple containing:
+            - false_positives: Indices where false positives occurred.
+            - false_negatives: Indices where false negatives occurred.
     """
     # First type: False Positives (predicted 1, but true label is 0)
     false_positives = np.where((y_pred == 1) & (y_true == 0))[0]
@@ -98,24 +97,24 @@ def get_misclassifications(
 
 
 def drop_confusion_matrix(
-    confussion_matrix: np.ndarray,
-    class_names: list[str],
-    output_path: str,
+    confusion_matrix: np.ndarray,
+    class_names: List[str],
+    output_path: str
 ) -> None:
     """
     Plots the confusion matrix and saves it as an image file.
 
     Args:
-        class_names: List of class names to label the axes.
-        output_path: Path where the confusion matrix image will be saved.
+        confusion_matrix (np.ndarray): Confusion matrix to plot.
+        class_names (List[str]): List of class names to label the axes.
+        output_path (str): Path where the confusion matrix image will be saved.
 
     Returns:
         None
     """
-
     plt.figure(figsize=(10, 7))
     sns.heatmap(
-        confussion_matrix,
+        confusion_matrix,
         annot=True,
         fmt="d",
         cmap="Blues",
@@ -130,9 +129,27 @@ def drop_confusion_matrix(
     plt.close()
     logging.info(f"Confusion matrix saved to {output_path}")
 
-@check_log_exists_decorator
-def evaluate_and_save_results(model, dataset, dataset_name, output_dir_path):
 
+@check_log_exists_decorator
+def evaluate_and_save_results(
+    model: tf.keras.Model,
+    dataset: tf.data.Dataset,
+    dataset_name: str,
+    output_dir_path: str
+) -> None:
+    """
+    Evaluates the model on a given dataset, logs the metrics, and saves
+    the confusion matrix and misclassifications.
+
+    Args:
+        model (tf.keras.Model): The trained model to be evaluated.
+        dataset (tf.data.Dataset): The dataset to evaluate the model on.
+        dataset_name (str): The name of the dataset (e.g., "train", "val", "test").
+        output_dir_path (str): The directory path where results will be saved.
+
+    Returns:
+        None
+    """
     logging.info(f"Evaluating model on {dataset_name} set...")
 
     # Make predictions
@@ -158,5 +175,3 @@ def evaluate_and_save_results(model, dataset, dataset_name, output_dir_path):
     logging.info(f"Identifying misclassifications on {dataset_name} set...")
     false_positives, false_negatives = get_misclassifications(y_true, y_pred)
     logging.info(f"False positives: {len(false_positives)}, False negatives: {len(false_negatives)}")
-
-
