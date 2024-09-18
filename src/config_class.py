@@ -32,8 +32,8 @@ class Callback:
 
 @dataclass
 class Paths:
-    train_path: str = ""
-    val_path: str = ""
+    subsets_path: str = ""
+    labels_path: str = ""
     images_dir: str = ""
 
 
