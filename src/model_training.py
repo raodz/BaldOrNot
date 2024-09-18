@@ -49,9 +49,13 @@ def train_model(config: BaldOrNotConfig, output_dir_path: str):
         f"Model configuration: Dense units: {vector_dim}, "
         f"Batch size: {batch_size}"
     )
+
     train_dataset = BaldDataset(df=train_df, batch_size=batch_size)
+    val_dataset = BaldDataset(df=val_df, batch_size=batch_size)
+    test_dataset = BaldDataset(df=test_df, batch_size=batch_size)
+
     logging.info(
-        f"Training dataset initialized with batch size {batch_size}"
+        f"Datasets initialized with batch size {batch_size}"
         f"and vector dim {vector_dim}"
     )
 
