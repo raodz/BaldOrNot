@@ -5,7 +5,7 @@ import keras
 import pandas as pd
 from typing import List, Tuple
 from sklearn.model_selection import train_test_split
-from src.config import BaldOrNotConfig
+from src.config_class import BaldOrNotConfig
 from src.constants import (
     N_CHANNELS_RGB,
     N_CHANNELS_GRAYSCALE,
