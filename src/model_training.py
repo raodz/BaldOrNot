@@ -105,7 +105,7 @@ def train_model(config: BaldOrNotConfig, output_dir_path: str):
     history = model.fit(
         train_dataset,
         epochs=config.training_params.epochs,
-        validation_data=train_dataset,
+        validation_data=val_dataset,
         callbacks=tf_callbacks,
     )
     logging.info("Model training completed")
