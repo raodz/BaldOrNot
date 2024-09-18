@@ -13,17 +13,19 @@ from sklearn.metrics import (
 )
 from src.constants import BALD_LABELS
 from src.utils import check_log_exists_decorator
-from typing import Tuple, Dict, List
+from typing import Tuple, Dict, List, Union
+from src.data import BaldDataset
+from src.model import BaldOrNotModel
 
 
-def make_predictions(model: tf.keras.Model, dataset: tf.data.Dataset) -> Tuple[np.ndarray, np.ndarray]:
+def make_predictions(model: tf.keras.Model, dataset: BaldDataset) -> Tuple[np.ndarray, np.ndarray]:
     """
     Makes predictions on the provided dataset and returns the true and
     predicted labels.
 
     Args:
-        model (tf.keras.Model): The trained model used for making predictions.
-        dataset (tf.data.Dataset): The dataset to make predictions on.
+        model: The trained model used for making predictions.
+        dataset: The dataset to make predictions on.
             This should be an iterable of (images, labels).
 
     Returns:
@@ -43,7 +45,8 @@ def make_predictions(model: tf.keras.Model, dataset: tf.data.Dataset) -> Tuple[n
     return y_true, y_pred
 
 
-def get_metrics(y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, float]:
+def get_metrics(y_true: np.ndarray, y_pred: np.ndarray) \
+        -> Dict[str, Union[float, np.ndarray]]:
     """
     Calculates various evaluation metrics based on the true and predicted labels.
 
@@ -132,8 +135,8 @@ def drop_confusion_matrix(
 
 @check_log_exists_decorator
 def evaluate_and_save_results(
-    model: tf.keras.Model,
-    dataset: tf.data.Dataset,
+    model: BaldOrNotModel,
+    dataset: BaldDataset,
     dataset_name: str,
     output_dir_path: str
 ) -> None:
