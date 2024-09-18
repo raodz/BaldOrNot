@@ -3,6 +3,7 @@ import logging
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -10,6 +11,7 @@ from sklearn.metrics import (
     f1_score,
     confusion_matrix,
 )
+from src.constants import BALD_LABELS
 
 
 def make_predictions(model, dataset) -> tuple[np.ndarray, np.ndarray]:
@@ -39,7 +41,7 @@ def make_predictions(model, dataset) -> tuple[np.ndarray, np.ndarray]:
     return y_true, y_pred
 
 
-def evaluate_model(
+def get_metrics(
     y_true: np.ndarray, y_pred: np.ndarray
 ) -> dict[str: float, str: float, str:float, str:float, str:np.ndarray]:
     """
@@ -126,3 +128,34 @@ def drop_confusion_matrix(
     plt.savefig(output_path)
     plt.close()
     logging.info(f"Confusion matrix saved to {output_path}")
+
+
+def evaluate_and_save_results(model, dataset, dataset_name, output_dir_path):
+
+    logging.info(f"Evaluating model on {dataset_name} set...")
+
+    # Make predictions
+    y_true, y_pred = make_predictions(model, dataset)
+
+    # Calculate metrics
+    metrics = get_metrics(y_true, y_pred)
+    logging.info(f"{dataset_name.capitalize()} metrics: ")
+    for metric, value in metrics.items():
+        if metric != 'conf_matrix':
+            logging.info(f"{metric}: {value:.4f}")
+
+    # Save confusion matrix
+    logging.info(f"Saving confusion matrix for {dataset_name} set...")
+    conf_matrix_path = os.path.join(output_dir_path, f'{dataset_name}_confusion_matrix.png')
+    drop_confusion_matrix(
+        metrics['conf_matrix'],
+        class_names=BALD_LABELS,
+        output_path=conf_matrix_path
+    )
+
+    # Log misclassifications
+    logging.info(f"Identifying misclassifications on {dataset_name} set...")
+    false_positives, false_negatives = get_misclassifications(y_true, y_pred)
+    logging.info(f"False positives: {len(false_positives)}, False negatives: {len(false_negatives)}")
+
+
