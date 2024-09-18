@@ -1,4 +1,8 @@
 import numpy as np
+import logging
+import tensorflow as tf
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
@@ -6,9 +10,6 @@ from sklearn.metrics import (
     f1_score,
     confusion_matrix,
 )
-import tensorflow as tf
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 
 def make_predictions(model, dataset) -> tuple[np.ndarray, np.ndarray]:
@@ -93,7 +94,7 @@ def get_misclassifications(
     return false_positives, false_negatives
 
 
-def plot_confusion_matrix(
+def drop_confusion_matrix(
     confussion_matrix: np.ndarray,
     class_names: list[str],
     output_path: str,
@@ -102,8 +103,6 @@ def plot_confusion_matrix(
     Plots the confusion matrix and saves it as an image file.
 
     Args:
-        y_true: Array of true labels.
-        y_pred: Array of predicted labels.
         class_names: List of class names to label the axes.
         output_path: Path where the confusion matrix image will be saved.
 
@@ -126,4 +125,4 @@ def plot_confusion_matrix(
 
     plt.savefig(output_path)
     plt.close()
-    print(f"Confusion matrix saved to {output_path}")
+    logging.info(f"Confusion matrix saved to {output_path}")
