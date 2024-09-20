@@ -1,8 +1,12 @@
 import os
+from collections import Counter
+
 import cv2
 import numpy as np
 import keras
 import pandas as pd
+from imblearn.over_sampling import SMOTE
+from imblearn.under_sampling import RandomUnderSampler
 from typing import List, Tuple
 from sklearn.model_selection import train_test_split
 from src.config_class import BaldOrNotConfig
@@ -168,7 +172,8 @@ class BaldDataset(keras.utils.Sequence):
         images_dir = self.config.paths.images_dir
 
         for i, ID in enumerate(list_IDs_temp):
-            image_path = os.path.join(images_dir, ID)
+            reconverted_ID = f"{int(ID): 06d}.jpg"
+            image_path = os.path.join(images_dir, reconverted_ID)
             image = cv2.imread(image_path)
 
             if image is None:
@@ -240,7 +245,7 @@ class BaldDataset(keras.utils.Sequence):
 
     @staticmethod
     def prepare_merged_dataframe(
-        subsets_path: str, labels_path: str
+        subsets_df: pd.DataFrame, labels_df: pd.DataFrame
     ) -> pd.DataFrame:
         """
         Prepares a combined DataFrame by merging two CSV files on a common
@@ -265,9 +270,7 @@ class BaldDataset(keras.utils.Sequence):
             A merged DataFrame containing data from both input CSVs,
             joined on the "image_id" column.
         """
-        subsets = pd.read_csv(subsets_path)
-        labels = pd.read_csv(labels_path)
-        df_merged = pd.merge(subsets, labels, how="inner", on="image_id")
+        df_merged = pd.merge(subsets_df, labels_df, how="inner", on="image_id")
 
         return df_merged[["image_id", "partition", "Bald"]].rename(
             columns={"Bald": "labels"}
@@ -311,3 +314,82 @@ class BaldDataset(keras.utils.Sequence):
         test_df = test_df.reset_index(drop=True)
 
         return train_df, val_df, test_df
+
+    @staticmethod
+    def convert_image_id_column_to_float(
+        df: pd.DataFrame, image_id_col: str = "image_id"
+    ) -> pd.DataFrame:
+        df[image_id_col] = (
+            df[image_id_col].str.replace(".jpg", "", regex=False).astype(float)
+        )
+        return df
+
+    @staticmethod
+    def balance_classes(
+        df: pd.DataFrame,
+        X_cols: list,
+        y_col: str,
+        minor_class_multiplier: int = 10,
+    ) -> pd.DataFrame:
+        """
+        Balances the classes in a DataFrame using a combination of oversampling
+        and undersampling.
+
+        This function oversamples the minority class using SMOTE by a factor
+        specified by `minority_multiplier` and then undersamples the majority
+        class using RandomUnderSampler to achieve a more balanced dataset.
+        The feature columns specified in `X_cols` are retained along with the
+        target column `y_col`.
+
+        Parameters:
+        -----------
+        df : pd.DataFrame
+            The DataFrame containing the data that needs to be balanced.
+        X_cols : list
+            A list of column names that represent the features (X).
+        y_col : str
+            The name of the column that contains the class labels (y).
+        minority_multiplier : int
+            The factor by which the minority class should be oversampled
+            (default is 10).
+
+        Returns:
+        --------
+        pd.DataFrame
+            A balanced DataFrame with class distributions adjusted based on
+            the multiplier.
+        """
+
+        # Split into features (X) and labels (y)
+        X = df[X_cols]
+        y = df[y_col]
+
+        # logger.info(f"Number of samples before balancing: {Counter(y)}")
+
+        # Get the number of samples in the minority class
+        class_counts = Counter(y)
+        minority_class = min(class_counts, key=class_counts.get)
+        minority_count = class_counts[minority_class]
+
+        # Calculate the desired size for the minority class after oversampling
+        target_minority_size = minority_count * minor_class_multiplier
+
+        # Set the oversampling strategy
+        sampling_strategy = {minority_class: target_minority_size}
+
+        # Oversampling the minority class using SMOTE
+        sm = SMOTE(sampling_strategy=sampling_strategy, random_state=42)
+        X_resampled, y_resampled = sm.fit_resample(X, y)
+
+        # Undersampling the majority class
+        rus = RandomUnderSampler(sampling_strategy="auto", random_state=42)
+        X_resampled, y_resampled = rus.fit_resample(X_resampled, y_resampled)
+
+        # logger.info(
+        #     f"Number of samples after balancing: {Counter(y_resampled)}")
+
+        # Recreate the DataFrame after resampling
+        balanced_df = pd.DataFrame(X_resampled, columns=X_cols)
+        balanced_df[y_col] = y_resampled
+
+        return balanced_df
