@@ -1,18 +1,18 @@
 from dataclasses import asdict
 from datetime import datetime
-
 import tensorflow as tf
 import os
 import logging
 
 from src.data import BaldDataset
 from src.model import BaldOrNotModel
-from src.config_class import BoldOrNotConfig
+from src.config_class import BaldOrNotConfig
 from src.utils import check_log_exists_decorator
+from src.evaluation import evaluate_and_save_results
 
 
 @check_log_exists_decorator
-def train_model(config: BoldOrNotConfig, output_dir_path: str):
+def train_model(config: BaldOrNotConfig, output_dir_path: str):
     """
     Trains the BaldOrNot model using the specified configuration.
 
@@ -24,7 +24,20 @@ def train_model(config: BoldOrNotConfig, output_dir_path: str):
     Args:
         config (BoldOrNotConfig): The configuration object containing model,
         training, and path parameters.
+        output_dir_path: The dir path, where is saved model and metrics.
     """
+    logging.info("Preparing data...")
+    merged_df = BaldDataset.prepare_merged_dataframe(
+        subsets_path=config.paths.subsets_path,
+        labels_path=config.paths.labels_path
+    )
+
+    train_df, val_df, test_df = BaldDataset.create_subset_dfs(merged_df)
+    logging.info(
+        f"Load train data: {len(train_df)} images,\n"
+        f"Load validation data: {len(val_df)} images,\n"
+        f"Load test data: {len(test_df)} images."
+    )
 
     logging.info("Starting model training...")
 
@@ -37,11 +50,17 @@ def train_model(config: BoldOrNotConfig, output_dir_path: str):
         f"Batch size: {batch_size}"
     )
 
-    train_dataset = BaldDataset(batch_size=batch_size, vector_dim=vector_dim)
+    datasets = {
+        'train': BaldDataset(df=train_df, batch_size=batch_size),
+        'val': BaldDataset(df=val_df, batch_size=batch_size),
+        'test': BaldDataset(df=test_df, batch_size=batch_size)
+    }
+
     logging.info(
-        f"Training dataset initialized with batch size {batch_size}"
+        f"Datasets initialized with batch size {batch_size}"
         f"and vector dim {vector_dim}"
     )
+
 
     # Initialize model
     model = BaldOrNotModel(**asdict(config.model_params))
@@ -86,12 +105,17 @@ def train_model(config: BoldOrNotConfig, output_dir_path: str):
         f"Starting training for {config.training_params.epochs} epochs"
     )
     history = model.fit(
-        train_dataset,
+        datasets['train'],
         epochs=config.training_params.epochs,
-        validation_data=train_dataset,
+        validation_data=datasets['val'],
         callbacks=tf_callbacks,
     )
     logging.info("Model training completed")
+
+    for dataset_name, dataset in datasets.items():
+        evaluate_and_save_results(
+            model, dataset, dataset_name, output_dir_path
+        )
 
     # Save model and plot
     model_path = os.path.join(

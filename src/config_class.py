@@ -32,13 +32,13 @@ class Callback:
 
 @dataclass
 class Paths:
-    train_path: str = ""
-    val_path: str = ""
+    subsets_path: str = ""
+    labels_path: str = ""
     images_dir: str = ""
 
 
 @dataclass
-class BoldOrNotConfig:
+class BaldOrNotConfig:
     model_params: ModelParams = field(default_factory=lambda: ModelParams())
     training_params: TrainingParams = field(
         default_factory=lambda: TrainingParams()

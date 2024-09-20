@@ -4,13 +4,13 @@ import shutil
 from jsonargparse import CLI
 import json
 from dataclasses import asdict
-from src.config_class import BoldOrNotConfig
+from src.config_class import BaldOrNotConfig
 from src.logging import setup_logging
 from src.model_training import train_model, init_output_dir
 from src.plot import plot_metric_curve
 
 
-def run_experiment(config: BoldOrNotConfig):
+def run_experiment(config: BaldOrNotConfig):
     logging.info("Initializing output directory...")
     output_dir_path = init_output_dir(config.training_params.training_name)
 
