@@ -14,7 +14,7 @@ from src.utils import check_log_exists_decorator
 def train_model(
     config: BaldOrNotConfig,
     output_dir_path: str,
-    tune_hyperparams: bool = True,
+    tune_hyperparams: bool = False,
 ):
     """
     Trains the BaldOrNot model using the specified configuration, with optional
