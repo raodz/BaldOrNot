@@ -172,8 +172,8 @@ class BaldDataset(keras.utils.Sequence):
         images_dir = self.config.paths.images_dir
 
         for i, ID in enumerate(list_IDs_temp):
-            reconverted_ID = f"{int(ID): 06d}.jpg"
-            image_path = os.path.join(images_dir, reconverted_ID)
+            reconverted_ID = f"{int(ID):06d}.jpg"
+            image_path = os.path.join(images_dir, reconverted_ID)  # noqa: E231
             image = cv2.imread(image_path)
 
             if image is None:
