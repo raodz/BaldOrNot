@@ -6,7 +6,8 @@ import json
 from dataclasses import asdict
 from src.config_class import BaldOrNotConfig
 from src.logging import setup_logging
-from src.model_training import train_model, init_output_dir
+from src.model_training import train_model
+from src.output import init_output_dir
 from src.plot import plot_metric_curve
 
 
