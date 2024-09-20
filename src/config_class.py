@@ -12,12 +12,13 @@ class ModelParams:
 
 @dataclass
 class TrainingParams:
-    epochs: int = 2
-    batch_size: int = 32
+    epochs: int = 100
+    batch_size: int = 128
     learning_rate: float = 0.001
     optimizer: str = "adam"
     loss_function: str = "binary_crossentropy"
     training_name: str = "training_name"
+    minor_class_multiplier: int = 1
 
 
 @dataclass
@@ -32,9 +33,16 @@ class Callback:
 
 @dataclass
 class Paths:
-    train_path: str = ""
-    val_path: str = ""
-    images_dir: str = ""
+    subsets_division_ds_path = (
+        "C:\\Users\\Admin\\Downloads\\archive (3)\\" "list_eval_partition.csv"
+    )
+    labels_ds_path = (
+        "C:\\Users\\Admin\\Downloads\\archive (3)\\" "list_attr_celeba.csv"
+    )
+    images_dir = (
+        "C:\\Users\\Admin\\Downloads\\archive (3)\\"
+        "img_align_celeba\\img_align_celeba"
+    )
 
 
 @dataclass
