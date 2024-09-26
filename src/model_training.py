@@ -4,6 +4,7 @@ from dataclasses import asdict
 
 import keras_tuner as kt
 import pandas as pd
+from datetime import datetime
 import tensorflow as tf
 
 from src.config_class import BaldOrNotConfig
@@ -170,3 +171,12 @@ def train_model(
     logging.info(f"Model saved at {model_path}")
 
     return history
+
+
+def init_output_dir(training_name: str) -> str:
+    project_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    current_training = f"{training_name}{current_date}"
+    output_dir_path = os.path.join(project_path, "trainings", current_training)
+    os.makedirs(output_dir_path, exist_ok=True)
+    return output_dir_path
