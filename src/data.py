@@ -330,7 +330,7 @@ class BaldDataset(keras.utils.Sequence):
         df: pd.DataFrame,
         X_cols: list,
         y_col: str,
-        minor_class_multiplier: int = 10,
+        minority_class_multiplier: int = 10,
     ) -> pd.DataFrame:
         """
         Balances the classes in a DataFrame using a combination of oversampling
@@ -373,7 +373,7 @@ class BaldDataset(keras.utils.Sequence):
         minority_count = class_counts[minority_class]
 
         # Calculate the desired size for the minority class after oversampling
-        target_minority_size = minority_count * minor_class_multiplier
+        target_minority_size = minority_count * minority_class_multiplier
 
         # Set the oversampling strategy
         sampling_strategy = {minority_class: target_minority_size}
