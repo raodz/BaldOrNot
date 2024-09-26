@@ -1,12 +1,14 @@
-import keras_tuner as kt
+import logging
+import os
 from dataclasses import asdict
+
+import keras_tuner as kt
 import pandas as pd
 import tensorflow as tf
-import os
-import logging
+
+from src.config_class import BaldOrNotConfig
 from src.data import BaldDataset
 from src.model import BaldOrNotModel
-from src.config_class import BaldOrNotConfig
 from src.utils import check_log_exists_decorator
 
 

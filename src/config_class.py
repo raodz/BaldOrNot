@@ -1,5 +1,5 @@
-from dataclasses import dataclass, field, asdict
-from typing import List, Dict, Any
+from dataclasses import asdict, dataclass, field
+from typing import Any, Dict, List
 
 
 @dataclass
@@ -12,7 +12,7 @@ class ModelParams:
 
 @dataclass
 class TrainingParams:
-    epochs: int = 100
+    epochs: int = 1
     batch_size: int = 128
     learning_rate: float = 0.001
     optimizer: str = "adam"

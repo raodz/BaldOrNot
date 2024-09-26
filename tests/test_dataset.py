@@ -1,14 +1,15 @@
-import pytest
-import pandas as pd
-import numpy as np
 from unittest.mock import patch
 
-from src.data import BaldDataset
+import numpy as np
+import pandas as pd
+import pytest
+
 from src.constants import (
-    N_CHANNELS_RGB,
-    N_CHANNELS_GRAYSCALE,
     DEFAULT_IMG_SIZE,
+    N_CHANNELS_GRAYSCALE,
+    N_CHANNELS_RGB,
 )
+from src.data import BaldDataset
 
 
 @pytest.fixture

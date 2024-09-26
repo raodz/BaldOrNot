@@ -1,5 +1,6 @@
 import os.path
 import shutil
+
 from src.config_class import BaldOrNotConfig
 from src.model_training import train_model
 

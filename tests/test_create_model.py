@@ -4,8 +4,8 @@ import pytest
 import tensorflow as tf
 
 from src.config_class import BaldOrNotConfig, ModelParams
-from src.model import BaldOrNotModel
 from src.constants import IMG_LEN, N_CHANNELS_RGB
+from src.model import BaldOrNotModel
 
 
 def test_model_creation(model: BaldOrNotModel) -> None:

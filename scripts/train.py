@@ -1,9 +1,11 @@
-import os
-import logging
-import shutil
-from jsonargparse import CLI
 import json
+import logging
+import os
+import shutil
 from dataclasses import asdict
+
+from jsonargparse import CLI
+
 from src.config_class import BaldOrNotConfig
 from src.logging import setup_logging
 from src.model_training import train_model

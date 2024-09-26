@@ -1,10 +1,10 @@
 import logging
-import pandas as pd
 import os
-import matplotlib.pyplot as plt
-import cv2
-from typing import List, Dict
+from typing import Dict, List
 
+import cv2
+import matplotlib.pyplot as plt
+import pandas as pd
 from keras.src.callbacks import History
 
 from src.constants import BALD_LABELS

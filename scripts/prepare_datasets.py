@@ -1,7 +1,9 @@
 import os
+
 import pandas as pd
-from src.data import BaldDataset
+
 from src.config_class import BaldOrNotConfig
+from src.data import BaldDataset
 
 config = BaldOrNotConfig()
 subsets_division_ds_path = config.paths.subsets_division_ds_path

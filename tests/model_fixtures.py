@@ -1,9 +1,9 @@
+import os
+import shutil
 from dataclasses import asdict
 
 import pytest
 import yaml
-import os
-import shutil
 
 from src.config_class import BaldOrNotConfig
 from src.model import BaldOrNotModel

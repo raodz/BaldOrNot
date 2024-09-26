@@ -1,19 +1,20 @@
 import os
 from collections import Counter
+from typing import List, Tuple
 
 import cv2
-import numpy as np
 import keras
+import numpy as np
 import pandas as pd
 from imblearn.over_sampling import SMOTE
 from imblearn.under_sampling import RandomUnderSampler
-from typing import List, Tuple
 from sklearn.model_selection import train_test_split
+
 from src.config_class import BaldOrNotConfig
 from src.constants import (
-    N_CHANNELS_RGB,
-    N_CHANNELS_GRAYSCALE,
     DEFAULT_IMG_SIZE,
+    N_CHANNELS_GRAYSCALE,
+    N_CHANNELS_RGB,
 )
 from src.exceptions import BaldOrNotDataError
 
