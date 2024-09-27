@@ -5,7 +5,7 @@ import os
 from src.constants import LOG_FILE_NAME
 
 
-def check_log_exists_decorator(func):
+def check_log_exists(func):
     """Decorator checking, if log file exists in directory."""
 
     @functools.wraps(func)

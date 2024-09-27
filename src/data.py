@@ -1,13 +1,10 @@
 import os
-from collections import Counter
 from typing import List, Tuple
 
 import cv2
 import keras
 import numpy as np
 import pandas as pd
-from imblearn.over_sampling import SMOTE
-from imblearn.under_sampling import RandomUnderSampler
 from sklearn.model_selection import train_test_split
 
 from src.config_class import BaldOrNotConfig
@@ -191,7 +188,7 @@ class BaldDataset(keras.utils.Sequence):
                 image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
 
             X[i] = image / 255.0  # Normalize to range [0, 1]
-            y[i] = self.df.loc[self.df["image_id"] == ID, "labels"].values[0]
+            y[i] = self.df.loc[self.df["image_id"] == ID, "label"].values[0]
 
         return X, y
 
@@ -274,7 +271,7 @@ class BaldDataset(keras.utils.Sequence):
         df_merged = pd.merge(subsets_df, labels_df, how="inner", on="image_id")
 
         return df_merged[["image_id", "partition", "Bald"]].rename(
-            columns={"Bald": "labels"}
+            columns={"Bald": "label"}
         )
 
     @staticmethod
@@ -326,71 +323,54 @@ class BaldDataset(keras.utils.Sequence):
         return df
 
     @staticmethod
-    def balance_classes(
-        df: pd.DataFrame,
-        X_cols: list,
-        y_col: str,
-        minority_class_multiplier: int = 10,
-    ) -> pd.DataFrame:
+    def undersample_majority_class(
+        df, label_col, majority_class_label, desired_classes_ratio
+    ):
         """
-        Balances the classes in a DataFrame using a combination of oversampling
-        and undersampling.
-
-        This function oversamples the minority class using SMOTE by a factor
-        specified by `minority_multiplier` and then undersamples the majority
-        class using RandomUnderSampler to achieve a more balanced dataset.
-        The feature columns specified in `X_cols` are retained along with the
-        target column `y_col`.
+        Function to undersample the majority class based on a desired majority to minority ratio.
 
         Parameters:
         -----------
         df : pd.DataFrame
-            The DataFrame containing the data that needs to be balanced.
-        X_cols : list
-            A list of column names that represent the features (X).
-        y_col : str
-            The name of the column that contains the class labels (y).
-        minority_multiplier : int
-            The factor by which the minority class should be oversampled
-            (default is 10).
+            DataFrame containing the data.
+        label_col : str
+            Name of the column containing class labels.
+        majority_class_label : int or str
+            Label of the majority class to be undersampled.
+        target_ratio : float
+            Desired ratio of majority to minority samples (e.g., 2.0 for a 2:1 ratio).
 
         Returns:
         --------
         pd.DataFrame
-            A balanced DataFrame with class distributions adjusted based on
-            the multiplier.
+            DataFrame with the majority class undersampled to achieve the desired ratio.
         """
+        # Split data into majority and minority classes
+        df_majority = df[df[label_col] == majority_class_label]
+        df_minority = df[df[label_col] != majority_class_label]
 
-        # Split into features (X) and labels (y)
-        X = df[X_cols]
-        y = df[y_col]
+        # Count the number of samples in the minority class
+        n_minority = len(df_minority)
 
-        # logger.info(f"Number of samples before balancing: {Counter(y)}")
+        # Calculate the number of samples needed for the majority class
+        n_majority = int(n_minority * desired_classes_ratio)
 
-        # Get the number of samples in the minority class
-        class_counts = Counter(y)
-        minority_class = min(class_counts, key=class_counts.get)
-        minority_count = class_counts[minority_class]
+        # Ensure n_majority does not exceed the original number of majority samples
+        n_majority = min(n_majority, len(df_majority))
 
-        # Calculate the desired size for the minority class after oversampling
-        target_minority_size = minority_count * minority_class_multiplier
+        # Undersample the majority class
+        df_majority_undersampled = df_majority.sample(
+            n=n_majority, random_state=42
+        )
 
-        # Set the oversampling strategy
-        sampling_strategy = {minority_class: target_minority_size}
+        # Combine undersampled majority class with minority class
+        df_undersampled = pd.concat(
+            [df_minority, df_majority_undersampled], ignore_index=True
+        )
 
-        # Oversampling the minority class using SMOTE
-        sm = SMOTE(sampling_strategy=sampling_strategy, random_state=42)
-        X_resampled, y_resampled = sm.fit_resample(X, y)
+        # Optional: Shuffle the data
+        df_undersampled = df_undersampled.sample(
+            frac=1, random_state=42
+        ).reset_index(drop=True)
 
-        # Undersampling the majority class
-        rus = RandomUnderSampler(sampling_strategy="auto", random_state=42)
-        X_resampled, y_resampled = rus.fit_resample(X_resampled, y_resampled)
-
-        # logger.info(
-        #     f"Number of samples after balancing: {Counter(y_resampled)}")
-
-        # Recreate the DataFrame after resampling
-        balanced_df = pd.DataFrame(X_resampled, columns=X_cols)
-        balanced_df[y_col] = y_resampled
-
-        return balanced_df
+        return df_undersampled

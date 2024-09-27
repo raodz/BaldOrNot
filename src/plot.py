@@ -1,4 +1,3 @@
-import logging
 import os
 from typing import Dict, List
 
@@ -7,8 +6,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from keras.src.callbacks import History
 
+import setup_logging
 from src.constants import BALD_LABELS
-from src.utils import check_log_exists_decorator
+from src.utils import check_log_exists
 
 
 def display_sample_images(df: pd.DataFrame, dir_path: str) -> None:
@@ -93,7 +93,7 @@ def plot_proportions(
     plt.show()
 
 
-@check_log_exists_decorator
+@check_log_exists
 def plot_metric_curve(
     history: History, metric_name: str, output_dir_path: str
 ) -> None:

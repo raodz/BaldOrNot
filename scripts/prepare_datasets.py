@@ -15,14 +15,9 @@ labels_df = pd.read_csv(labels_ds_path)
 
 cleaned_df = BaldDataset.get_cleaned_df(labels_df, images_dir)
 merged_df = BaldDataset.prepare_merged_dataframe(subsets_df, labels_df)
-# converted_df = BaldDataset.convert_image_id_column_to_float(merged_df)
-# balanced_df = BaldDataset.balance_classes(
-#     converted_df,
-#     X_cols=["image_id", "partition"],
-#     y_col="labels",
-#     minority_class_multiplier=config.training_params.minor_class_multiplier,
-# )
-train_df, val_df, test_df = BaldDataset.create_subset_dfs(merged_df)
+converted_df = BaldDataset.convert_image_id_column_to_float(merged_df)
+
+train_df, val_df, test_df = BaldDataset.create_subset_dfs(converted_df)
 
 
 data_dir = os.path.join("..", "src", "data")

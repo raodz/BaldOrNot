@@ -1,3 +1,5 @@
+BALD_LABEL = 1
+NOT_BALD_LABEL = -1
 BALD_LABELS = {-1: "Not Bald", 1: "Bald"}
 IMG_LEN = 224
 N_CHANNELS_RGB = 3
