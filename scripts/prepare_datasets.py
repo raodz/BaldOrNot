@@ -4,6 +4,7 @@ import pandas as pd
 
 from src.config_class import BaldOrNotConfig
 from src.data import BaldDataset
+from src.constants import ORIGINAL_NOT_BALD_LABEL, NOT_BALD_LABEL
 
 config = BaldOrNotConfig()
 subsets_division_ds_path = config.paths.subsets_division_ds_path
@@ -16,8 +17,13 @@ labels_df = pd.read_csv(labels_ds_path)
 cleaned_df = BaldDataset.get_cleaned_df(labels_df, images_dir)
 merged_df = BaldDataset.prepare_merged_dataframe(subsets_df, labels_df)
 converted_df = BaldDataset.convert_image_id_column_to_float(merged_df)
+corrected_labels_df = BaldDataset.replace_bald_label(
+    converted_df,
+    original_label=ORIGINAL_NOT_BALD_LABEL,
+    new_label=NOT_BALD_LABEL,
+)
 
-train_df, val_df, test_df = BaldDataset.create_subset_dfs(converted_df)
+train_df, val_df, test_df = BaldDataset.create_subset_dfs(corrected_labels_df)
 
 
 data_dir = os.path.join("..", "src", "data")

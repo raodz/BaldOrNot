@@ -374,3 +374,13 @@ class BaldDataset(keras.utils.Sequence):
         ).reset_index(drop=True)
 
         return df_undersampled
+
+    @staticmethod
+    def replace_bald_label(
+        df: pd.DataFrame,
+        original_label: str,
+        new_label: str,
+        column_name: str = "label",
+    ) -> pd.DataFrame:
+        df[column_name] = df[column_name].replace(original_label, new_label)
+        return df
