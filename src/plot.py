@@ -8,7 +8,7 @@ from typing import List, Dict
 from keras.src.callbacks import History
 
 from src.constants import BALD_LABELS
-from utils import check_log_exists_decorator
+from src.utils import check_log_exists_decorator
 
 def display_sample_images(df: pd.DataFrame, dir_path: str) -> None:
     """

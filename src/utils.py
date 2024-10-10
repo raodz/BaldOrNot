@@ -1,4 +1,3 @@
-# utils.py
 import os
 import functools
 from src.constants import LOG_FILE_NAME
