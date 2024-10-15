@@ -25,4 +25,9 @@ def preprocess_image_for_model(img: np.ndarray) -> np.ndarray:
     return img_batch
 
 
+def make_prediction(model: BaldOrNotModel, img_batch: np.ndarray) -> float:
+    """Make a prediction using a given model and image batch."""
+    prediction = model.predict(img_batch)
 
+    label = round(prediction[0][0])
+    return label
