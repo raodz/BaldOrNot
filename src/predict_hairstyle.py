@@ -18,7 +18,7 @@ def load_image_to_predict(img_dir_path: str, img_name: str) -> np.ndarray:
 def preprocess_image_for_model(img: np.ndarray) -> np.ndarray:
     """Preprocess an image to be fed into a model."""
     img_resized = cv2.resize(img, DEFAULT_IMG_SIZE)
-    if img_resized.shape[-1] == 1:
+    if len(img_resized.shape) == 2 or img_resized.shape[-1] == 1:
         img_resized = cv2.cvtColor(img_resized, cv2.COLOR_GRAY2RGB)
     img_normalized = img_resized / 255.0
     img_batch = np.expand_dims(img_normalized, axis=0)
