@@ -12,7 +12,7 @@ class ModelParams:
 
 @dataclass
 class TrainingParams:
-    epochs: int = 2
+    epochs: int = 1
     batch_size: int = 32
     learning_rate: float = 0.001
     optimizer: str = "adam"
@@ -32,9 +32,13 @@ class Callback:
 
 @dataclass
 class Paths:
-    subsets_path: str = ""
-    labels_path: str = ""
-    images_dir: str = ""
+    subsets_path: str = (
+        r"C:\Users\user\Projekty\BaldOrNot\src\data\list_eval_partition.csv"
+    )
+    labels_path: str = (
+        r"C:\Users\user\Projekty\BaldOrNot\src\data\list_attr_celeba.csv"
+    )
+    images_dir: str = r"C:\Users\user\Projekty\BaldOrNot\src\data\img_align_celeba\img_align_celeba"
 
 
 @dataclass
@@ -80,4 +84,27 @@ class BaldOrNotConfig:
                 callback["args"] = {}
         self.paths = (
             Paths(**self.paths) if isinstance(self.paths, dict) else self.paths
+        )
+
+
+@dataclass
+class PredictParams:
+    model_path: str = r"C:\Users\user\Projekty\BaldOrNot\trainings\training_name2024-10-14_23-34-02\model.keras"
+    image_dir_path = (
+        r"C:\Users\user\Projekty\BaldOrNot\scrapping\downloaded_images"
+    )
+    image_name = "image_89.jpg"
+
+
+@dataclass
+class PredictConfig:
+    predict_params: PredictParams = field(
+        default_factory=lambda: PredictParams()
+    )
+
+    def __post_init__(self):
+        self.predict_params = (
+            PredictParams(**self.predict_params)
+            if isinstance(self.predict_params, dict)
+            else self.predict_params
         )
