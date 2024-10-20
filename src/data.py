@@ -169,25 +169,45 @@ class BaldDataset(keras.utils.Sequence):
 
         for i, ID in enumerate(list_IDs_temp):
             image_path = os.path.join(images_dir, ID)
-            image = cv2.imread(image_path)
 
-            if image is None:
-                raise BaldOrNotDataError(f"Failed to load image: {image_path}")
-
-            image = cv2.resize(image, self.dim[::-1])
-            # avoiding ValueError by adjusting self.dim order
-
-            # If grayscale, convert it to RGB
-            if (
-                image.shape[-1] == N_CHANNELS_GRAYSCALE
-                and self.n_channels == N_CHANNELS_RGB  # noqa: W503
-            ):
-                image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
-
-            X[i] = image / 255.0  # Normalize to range [0, 1]
+            X[i] = self.preprocess_image(image_path, self.dim, self.n_channels)
             y[i] = self.df.loc[self.df["image_id"] == ID, "labels"].values[0]
 
         return X, y
+
+    @staticmethod
+    def preprocess_image(image_path, dim, n_channels):
+        """
+        Preprocesses an image to be fed into a model.
+
+        Parameters:
+        ----------
+        image_path : str
+            The path to the image file.
+        dim : Tuple[int, int]
+            The dimensions to which the image will be resized.
+        n_channels : int
+            The number of channels in the image.
+
+        Returns:
+        -------
+        np.ndarray
+            The preprocessed image.
+        """
+        image = cv2.imread(image_path)
+
+        if image is None:
+            raise BaldOrNotDataError(f"Failed to load image: {image_path}")
+
+        image = cv2.resize(image, dim[::-1])
+
+        if (
+            image.shape[-1] == N_CHANNELS_GRAYSCALE
+            and n_channels == N_CHANNELS_RGB
+        ):
+            image = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+
+        return image / 255.0
 
     @staticmethod
     def __get_wrong_files_list(directory: str) -> List[str]:
