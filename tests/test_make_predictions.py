@@ -1,20 +1,16 @@
-import tensorflow as tf
-
 import numpy as np
 
-from src.predict_hairstyle import preprocess_image_for_model, make_prediction
+from src.constants import DEFAULT_IMG_SIZE, N_CHANNELS_RGB
+from src.data import BaldDataset
+from src.predict_hairstyle import make_prediction
 
 
-def test_make_prediction():
-    image = np.ones((100, 100, 3))
+def test_make_prediction(prediction_image_path, trained_model):
+    preprocessed_image = BaldDataset.preprocess_image(
+        prediction_image_path, DEFAULT_IMG_SIZE, N_CHANNELS_RGB
+    )
+    img_batch = np.expand_dims(preprocessed_image, axis=0)
 
-    preprocessed_image = preprocess_image_for_model(image)
-
-    model_path = r"C:\Users\user\Projekty\BaldOrNot\trainings\training_name2024-10-14_23-34-02\model.keras"
-    model = tf.keras.models.load_model(model_path)
-
-    prediction = make_prediction(model, preprocessed_image)
+    prediction = make_prediction(trained_model, img_batch)
 
     assert prediction in [0, 1]
-
-
