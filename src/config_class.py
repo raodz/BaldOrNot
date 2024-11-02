@@ -90,7 +90,7 @@ class BaldOrNotConfig:
 @dataclass
 class PredictParams:
     model_path: str = r"C:\Users\user\Projekty\BaldOrNot\trainings\training_name2024-10-14_23-34-02\model.keras"
-    image_dir_path = (
+    image_dir_path: str = (
         r"C:\Users\user\Projekty\BaldOrNot\scrapping\downloaded_images"
     )
     image_name = "image_89.jpg"
