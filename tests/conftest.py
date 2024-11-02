@@ -1,8 +1,6 @@
 import numpy as np
 import tensorflow as tf
 
-pytest_plugins = ["tests.model_fixtures"]
-
 import pytest
 
 
