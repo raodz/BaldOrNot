@@ -1,9 +1,9 @@
+import os
+import shutil
 from dataclasses import asdict
 
 import pytest
 import yaml
-import os
-import shutil
 
 from src.config_class import BaldOrNotConfig
 from src.model import BaldOrNotModel
@@ -32,8 +32,8 @@ def model(test_config) -> BaldOrNotModel:
 @pytest.fixture
 def output_dir():
     """
-    Fixture that creates the 'test_output_dir' directory and a 'training.log' file
-    before each test and removes them after the test.
+    Fixture that creates the 'test_output_dir' directory and a 'training.log'
+    file before each test and removes them after the test.
 
     Yields:
         str: The path to the output directory where logging and model outputs
