@@ -64,7 +64,7 @@ The above plot shows the F1 score progression over epochs for both the training 
 
 On the validation set:
 - The model achieved a maximum F1 score of around 0.17.
-- Dummy models achieved much lower scores: `always bald` (0.04), `always not bald` (0.00), and `random` (0.05).
+- Dummy models achieved much lower scores: 0.04 (AlwaysBaldModel), 0.00 (AlwaysNotBaldModel) and 0.05 (RandomModel).
 
 ## Challenges
 ### Class Imbalance
