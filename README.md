@@ -1,6 +1,6 @@
 # BaldOrNot
 ## Project Overview
-This project focuses on the binary classification of individuals as either bald or having hair, using image data from the [CelebFaces Attributes](https://www.kaggle.com/datasets/jessicali9530/celeba-dataset?resource=download). The objective is to develop a machine learning model using TensorFlow that accurately predicts whether a person is bald or not, based on the features extracted from their images.
+This project, developed by [raodz](https://github.com/raodz) and [jakub1090cn](https://github.com/jakub1090cn) under the supervision of [skrzypczykt](https://github.com/skrzypczykt), focuses on creating a binary classification model to distinguish between bald and non-bald individuals using the CelebA dataset. Leveraging TensorFlow, the model employs a ConvNeXtTiny backbone for feature extraction, combined with a dense classification head. The dataset presented significant class imbalance, which required targeted preprocessing, augmentation, and the use of F1 score as the primary evaluation metric. The project includes extensive hyperparameter tuning, resulting in a robust approach to handling imbalanced data in computer vision tasks.
 
 <img src="src/samples/bald_or_not.jpg" alt="Bald Or Not" width="1000"/>
 
@@ -28,7 +28,7 @@ This project focuses on the binary classification of individuals as either bald 
    - Predicts randomly
 
 ## Data
-The data used in this project was obtained from the CelebFaces Attributes (CelebA) Dataset, a widely used dataset in computer vision and deep learning for facial recognition tasks. Originally, the dataset contained 202,599 face images, of which 4,547 were labeled as bald and 198,052 as not bald. After filtering out corrupted files, the numbers were reduced to 3,249 bald and 140,721 non-bald images.
+The data used in this project was obtained from the [CelebFaces Attributes CelebA Dataset](https://www.kaggle.com/datasets/jessicali9530/celeba-dataset?resource=download), a widely used dataset in computer vision and deep learning for facial recognition tasks. Originally, the dataset contained 202,599 face images, of which 4,547 were labeled as bald and 198,052 as not bald. After filtering out corrupted files, the numbers were reduced to 3,249 bald and 140,721 non-bald images.
 
 CelebA is ideal for training and testing models aimed at face detection and facial attribute recognition, such as identifying people with specific traits (e.g., brown hair, smiling, wearing glasses). The images in this dataset include a variety of poses, backgrounds, and diverse individuals, making it highly suitable for developing robust computer vision models. The dataset was originally collected by researchers at MMLAB, The Chinese University of Hong Kong, and is supported by comprehensive annotations for each image.
 
