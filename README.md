@@ -63,7 +63,7 @@ This project is still under development, and results are currently available onl
 The above plot shows the F1 score progression over epochs for both the training and validation sets. The F1 score was chosen as the primary evaluation metric due to the significant class imbalance between bald and non-bald images. Initially, the model's F1 score improves quickly on the training set, but the validation set shows a slower, more gradual improvement, indicating challenges with generalization.
 
 On the validation set:
-- The model achieved a maximum F1 score of around 0.14.
+- The model achieved a maximum F1 score of around 0.17.
 - Dummy models achieved much lower scores: `always bald` (0.04), `always not bald` (0.00), and `random` (0.05).
 
 ## Challenges
