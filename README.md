@@ -54,7 +54,7 @@ This script is optional. If not used, hyperparameters can be manually specified 
 ## Results (In Progress)
 This project is still under development, and results are currently available only for the validation set.
 <p align="center">
-    <img src="results/f1_score_val_curves.png" alt="F1 Score Curves for Training and Validation">
+    <img src="results/f1_score_val_train_curves.png" alt="F1 Score Curves for Training and Validation">
 </p>
 
 <p align="center"><em>Figure 1: F1 Score Curves for Training and Validation.</em></p>
