@@ -6,9 +6,12 @@ The objective is to develop a machine learning model using TensorFlow that accur
 or not, based on the features extracted from their images.\
 ![BaldOrNot](src/samples/bald_or_not.jpg)
 
+
 ## Sample images
-![Bald](src/samples/bald.jpg)\
-![Not Bald](src/samples/not_bald.jpg)
+<p align="center">
+    <img src="src/samples/bald.jpg" alt="Bald" width="200"/>
+    <img src="src/samples/not_bald.jpg" alt="Not Bald" width="200"/>
+</p>
 
 
 ## CelebFaces
