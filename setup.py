@@ -8,22 +8,24 @@ def parse_requirements(filename):
         ]
 
 
-# Read requirements from requirements.txt
 requirements = parse_requirements("requirements.txt")
 
 setup(
-    name="XYZ",
+    name="BaldOrNot",
     version="0.1.0",
     packages=find_packages(),
     install_requires=requirements,
-    author="Your Name",
-    author_email="your.email@example.com",
-    description="A short description of your project",
-    url="https://github.com/jakub1090cn/BaldOrNot",  # if you have a GitHub repo
+    author="raodz, jakub1090cn, skrzypczykt",
+    author_email="contact@example.com",
+    description="A machine learning project for classifying individuals as bald or not based on facial images.",
+    url="https://github.com/raodz/BaldOrNot",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
+        "Intended Audience :: Science/Research",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
     python_requires=">=3.6",
+    include_package_data=True,
 )
