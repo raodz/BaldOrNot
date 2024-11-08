@@ -27,6 +27,62 @@ This project, developed by [raodz](https://github.com/raodz) and [jakub1090cn](h
    - Always predicts 'bald' (1)
    - Predicts randomly
 
+## Installation
+
+Follow these steps to set up and run the project. Note that the project was developed on **Windows** using **Python 3.12**; compatibility with other systems has not been tested.
+
+### Prerequisites
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/raodz/BaldOrNot.git
+   cd BaldOrNot
+   ```
+
+2. **Ensure Python 3.12 is installed**.
+You can download it from python.org.
+
+3. **Install dependencies**. 
+The project’s dependencies are listed in requirements.txt. To install them, use:
+
+```bash
+pip install -r requirements.txt
+```
+
+### Configuration
+
+The project includes a config_class.py file that contains all the configuration parameters organized by categories (e.g., training, tuning, model, paths, and augmentation). Some configuration parameters, such as file paths, may require adjustments to match your directory structure.
+
+### Data Setup
+
+The input data does not need to be located in the project directory. The prepare_datasets.py script will create the necessary CSV files in the correct format based on the file paths specified in config_class.py.
+
+### Running the Project
+
+Prepare the data: To preprocess the data and create correctly formatted CSV files based on the paths specified in config_class.py, run:
+
+```bash
+python prepare_datasets.py
+```
+
+Optional: Tune hyperparameters: If you wish to tune hyperparameters before training, you can run:
+
+```bash
+python tune_hyperparameters.py
+```
+
+Train the model: Run the main script to start training the model. This will use the parameters set in config_class.py.
+
+```bash
+python train.py
+```
+
+Evaluate with dummy models (optional): After training, you can assess the model’s performance against baseline dummy models by running:
+
+```bash
+python run_dummy_models_on_val.py
+```
+
 ## Data
 The data used in this project was obtained from the [CelebFaces Attributes CelebA Dataset](https://www.kaggle.com/datasets/jessicali9530/celeba-dataset?resource=download), a widely used dataset in computer vision and deep learning for facial recognition tasks. Originally, the dataset contained 202,599 face images, of which 4,547 were labeled as bald and 198,052 as not bald. After filtering out corrupted files, the numbers were reduced to 3,249 bald and 140,721 non-bald images.
 
