@@ -11,12 +11,12 @@ from data_utils import (
     prepare_merged_dataframe,
     undersample_classes,
 )
-from src.constants import (
+from src import (
     DEFAULT_IMG_SIZE,
     N_CHANNELS_GRAYSCALE,
     N_CHANNELS_RGB,
 )
-from src.dataset import BaldDataset
+from src import BaldDataset
 
 
 @pytest.fixture

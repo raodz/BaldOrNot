@@ -9,9 +9,8 @@ from data_utils import (
     prepare_merged_dataframe,
     replace_bald_label,
 )
-from src.config_class import BaldOrNotConfig
-from src.constants import NOT_BALD_LABEL, ORIGINAL_NOT_BALD_LABEL
-from src.dataset import BaldDataset
+from src import BaldOrNotConfig
+from src import NOT_BALD_LABEL, ORIGINAL_NOT_BALD_LABEL
 
 
 def main():

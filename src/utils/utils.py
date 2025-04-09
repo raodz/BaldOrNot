@@ -1,9 +1,8 @@
-import os
 import functools
 import os
 import numpy as np
-from config_class import BaldOrNotConfig
-from src.constants import LOG_FILE_NAME
+from src.config.config_class import BaldOrNotConfig
+from src import LOG_FILE_NAME
 
 
 def check_log_exists(func):

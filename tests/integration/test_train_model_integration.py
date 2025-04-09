@@ -1,8 +1,8 @@
 import os.path
 import shutil
 
-from src.config_class import BaldOrNotConfig
-from src.model_training import train_model
+from src import BaldOrNotConfig
+from src import train_model
 
 
 def test_num_of_epochs(test_config: BaldOrNotConfig, output_dir: str) -> None:

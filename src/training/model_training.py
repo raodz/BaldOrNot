@@ -6,13 +6,13 @@ from datetime import datetime
 import pandas as pd
 import tensorflow as tf
 
-from data_utils import adjust_class_distribution, get_classes_weights
-from src.config_class import BaldOrNotConfig
-from src.constants import DEFAULT_IMG_SIZE, N_CHANNELS_RGB
-from src.dataset import BaldDataset
-from src.metrics import get_metrics
-from src.model import BaldOrNotModel
-from src.utils import check_log_exists
+from src.data.data_utils import adjust_class_distribution, get_classes_weights
+from src import BaldOrNotConfig
+from src import DEFAULT_IMG_SIZE, N_CHANNELS_RGB
+from src import BaldDataset
+from src import get_metrics
+from src import BaldOrNotModel
+from src import check_log_exists
 
 
 @check_log_exists

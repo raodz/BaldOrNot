@@ -1,7 +1,7 @@
 import pandas as pd
 
 from data_utils import prepare_merged_dataframe
-from src.dataset import check_sample_images
+from src import check_sample_images
 
 
 def test_check_sample_images(monkeypatch):

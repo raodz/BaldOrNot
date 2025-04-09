@@ -6,11 +6,11 @@ from dataclasses import asdict
 
 from jsonargparse import CLI
 
-from src.config_class import BaldOrNotConfig
-from src.model_training import train_model
-from src.output import init_output_dir
-from src.plot import plot_metric_curve
-from src.setup_logging import setup_logging
+from src import BaldOrNotConfig
+from src import train_model
+from src import init_output_dir
+from src import plot_metric_curve
+from src.logging import setup_logging
 from utils import save_metrics_report
 
 

@@ -76,11 +76,11 @@ class Paths:
     labels_ds_path = (
         "C:\\Users\\Admin\\Downloads\\archive (3)\\" "list_attr_celeba.csv"
     )
-    train_csv_path = os.path.join("..", "src", "data", "train.csv")
-    val_csv_path = os.path.join("..", "src", "data", "val.csv")
-    test_csv_path = os.path.join("..", "src", "data", "test.csv")
-    config_yaml_path = os.path.join("..", "config.yaml")
-    results_dir = os.path.join("..", "results")
+    train_csv_path = os.path.join("../..", "src", "data", "train.csv")
+    val_csv_path = os.path.join("../..", "src", "data", "val.csv")
+    test_csv_path = os.path.join("../..", "src", "data", "test.csv")
+    config_yaml_path = os.path.join("../..", "config.yaml")
+    results_dir = os.path.join("../..", "results")
     images_dir = (
         "C:\\Users\\Admin\\Downloads\\archive (3)\\"
         "img_align_celeba\\img_align_celeba"

@@ -5,8 +5,8 @@ from dataclasses import asdict
 import pytest
 import yaml
 
-from src.config_class import BaldOrNotConfig
-from src.model import BaldOrNotModel
+from src import BaldOrNotConfig
+from src import BaldOrNotModel
 
 
 @pytest.fixture

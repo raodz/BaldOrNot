@@ -1,7 +1,7 @@
 import tensorflow as tf
 from abc import ABC, abstractmethod
 
-from constants import NOT_BALD_LABEL, BALD_LABEL
+from src.config.constants import NOT_BALD_LABEL, BALD_LABEL
 
 
 class DummyModel(tf.keras.Model, ABC):

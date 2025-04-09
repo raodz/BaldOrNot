@@ -4,9 +4,9 @@ from functools import partial
 
 import keras_tuner as kt
 from tensorflow import keras
-from config_class import BaldOrNotConfig
+from src.config.config_class import BaldOrNotConfig
 from metrics import get_metrics
-from src.model import BaldOrNotModel
+from src import BaldOrNotModel
 
 
 def model_builder(hp, config):
@@ -66,7 +66,7 @@ def tune_model(train_dataset, val_dataset, config: BaldOrNotConfig):
         objective=params.objective,
         max_epochs=params.epochs,
         factor=params.factor,
-        directory=os.path.join("..", "tuning_logs"),
+        directory=os.path.join("../..", "tuning_logs"),
         project_name=f"hyperband_tuning_{params.steps_per_epoch}",
     )
 

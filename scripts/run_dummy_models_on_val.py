@@ -2,9 +2,9 @@ import pandas as pd
 import os
 
 from constants import DUMMY_METRICS_FILE_NAME_PREFIX
-from src.dummy_models import AlwaysBaldModel, AlwaysNotBaldModel, RandomModel
-from src.evaluation import get_metrics
-from src.config_class import BaldOrNotConfig
+from src import AlwaysBaldModel, AlwaysNotBaldModel, RandomModel
+from src import get_metrics
+from src import BaldOrNotConfig
 from utils import save_metrics_report
 
 

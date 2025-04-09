@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from keras.src.callbacks import History
 
-from src.constants import BALD_LABELS
-from src.utils import check_log_exists
+from src import BALD_LABELS
+from src import check_log_exists
 
 
 def display_sample_images(df: pd.DataFrame, dir_path: str):

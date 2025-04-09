@@ -13,11 +13,10 @@ from sklearn.metrics import (
     recall_score,
 )
 
-import setup_logging
-from src.constants import BALD_LABELS
-from src.dataset import BaldDataset
-from src.model import BaldOrNotModel
-from src.utils import check_log_exists
+from src import BALD_LABELS
+from src import BaldDataset
+from src import BaldOrNotModel
+from src import check_log_exists
 
 
 def make_predictions(

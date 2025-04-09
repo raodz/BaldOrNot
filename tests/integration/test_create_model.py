@@ -3,9 +3,9 @@ from dataclasses import asdict
 import pytest
 import tensorflow as tf
 
-from src.config_class import BaldOrNotConfig, ModelParams
-from src.constants import IMG_LEN, N_CHANNELS_RGB
-from src.model import BaldOrNotModel
+from src import BaldOrNotConfig, ModelParams
+from src import IMG_LEN, N_CHANNELS_RGB
+from src import BaldOrNotModel
 
 
 def test_model_creation(model: BaldOrNotModel) -> None:

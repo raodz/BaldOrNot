@@ -1,7 +1,7 @@
 import logging
 import os
 
-from src.constants import LOG_FILE_NAME
+from src import LOG_FILE_NAME
 
 
 def setup_logging(training_dir: str):
