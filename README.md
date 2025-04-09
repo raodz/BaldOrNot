@@ -1,14 +1,20 @@
 # BaldOrNot
+
+
 ## Project Overview
+
 **This project**, developed by [raodz](https://github.com/raodz) and [jakub1090cn](https://github.com/jakub1090cn) under the supervision of [skrzypczykt](https://github.com/skrzypczykt), focuses on creating a binary classification model to distinguish between **bald** and **non-bald** individuals using the [CelebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html). Leveraging [TensorFlow](https://www.tensorflow.org), the model employs a [ConvNeXtTiny](https://arxiv.org/abs/2201.03545) backbone for feature extraction, combined with a dense classification head.
 
 Although the dataset presented class imbalance, the team addressed it through targeted preprocessing, augmentation, and the use of the **F1 score** as the primary evaluation metric. Furthermore, **extensive hyperparameter tuning** was conducted, resulting in a robust approach to handling imbalanced data in computer vision tasks.
 
 <img src="src/samples/bald_or_not.jpg" alt="Bald Or Not" width="1000"/>
 
+
 ## Project Structure
+
 ### Diagram
 
+```
 BaldOrNot/
 ├── .github/
 │   └── pull_request_template.md
@@ -79,9 +85,10 @@ BaldOrNot/
 ├── README.md
 ├── requirements.txt
 └── setup.py
-
+```
 
 ### Scripts and Functionalities
+
 1. **prepare_datasets.py**  
    Preprocesses the data by:
    - Removing erroneous files.
