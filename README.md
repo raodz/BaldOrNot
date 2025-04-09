@@ -1,12 +1,85 @@
 # BaldOrNot
 ## Project Overview
-This project, developed by [raodz](https://github.com/raodz) and [jakub1090cn](https://github.com/jakub1090cn) under the supervision of [skrzypczykt](https://github.com/skrzypczykt), focuses on creating a binary classification model to distinguish between bald and non-bald individuals using the CelebA dataset. Leveraging TensorFlow, the model employs a ConvNeXtTiny backbone for feature extraction, combined with a dense classification head. The dataset presented significant class imbalance, which required targeted preprocessing, augmentation, and the use of F1 score as the primary evaluation metric. The project includes extensive hyperparameter tuning, resulting in a robust approach to handling imbalanced data in computer vision tasks.
+**This project**, developed by [raodz](https://github.com/raodz) and [jakub1090cn](https://github.com/jakub1090cn) under the supervision of [skrzypczykt](https://github.com/skrzypczykt), focuses on creating a binary classification model to distinguish between **bald** and **non-bald** individuals using the [CelebA dataset](http://mmlab.ie.cuhk.edu.hk/projects/CelebA.html). Leveraging [TensorFlow](https://www.tensorflow.org), the model employs a [ConvNeXtTiny](https://arxiv.org/abs/2201.03545) backbone for feature extraction, combined with a dense classification head.
+
+Although the dataset presented class imbalance, the team addressed it through targeted preprocessing, augmentation, and the use of the **F1 score** as the primary evaluation metric. Furthermore, **extensive hyperparameter tuning** was conducted, resulting in a robust approach to handling imbalanced data in computer vision tasks.
 
 <img src="src/samples/bald_or_not.jpg" alt="Bald Or Not" width="1000"/>
 
 ## Project Structure
 ### Diagram
-*(To be added)*
+
+BaldOrNot/
+├── .github/
+│   └── pull_request_template.md
+├── notebooks/
+│   ├── exploratory_data_analysis.ipynb
+│   └── train.ipynb
+├── results/
+│   └── f1_score_val_train_curves.png
+├── scripts/
+│   ├── prepare_datasets.py
+│   ├── run_dummy_models_on_val.py
+│   ├── train.py
+│   └── tune_hyperparameters.py
+├── src/
+│   ├── config/
+│   │   ├── __init__.py
+│   │   ├── config_class.py
+│   │   └── constants.py
+│   ├── data/
+│   │   ├── __init__.py
+│   │   ├── data_utils.py
+│   │   └── dataset.py
+│   ├── evaluation/
+│   │   ├── __init__.py
+│   │   ├── evaluation.py
+│   │   ├── metrics.py
+│   │   └── plot.py
+│   ├── logging/
+│   │   ├── __init__.py
+│   │   └── setup_logging.py
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── dummy_models.py
+│   │   ├── exceptions.py
+│   │   └── model.py
+│   ├── samples/
+│   │   ├── __init__.py
+│   │   ├── bald.jpg
+│   │   ├── bald_or_not.jpg
+│   │   └── not_bald.jpg
+│   ├── training/
+│   │   ├── __init__.py
+│   │   ├── model_training.py
+│   │   └── tuning.py
+│   └── utils/
+│       ├── __init__.py
+│       ├── output.py
+│       └── utils.py
+├── tests/
+│   ├── integration/
+│   │   ├── test_create_model.py
+│   │   └── test_train_model_integration.py
+│   ├── test_images/
+│   │   ├── BALD4.jpg
+│   │   └── corrupted.txt
+│   └── unit/
+│       ├── test_dataset.py
+│       ├── test_prepare_data.py
+│       ├── test_untrained_model.py
+│       ├── conftest.py
+│       ├── model_fixtures.py
+│       ├── precommits_testing.py
+│       └── test_config.yaml
+├── .gitignore
+├── .pre-commit-config.yaml
+├── config.yaml
+├── CONTRIBUTING.md
+├── README.md
+├── requirements.txt
+└── setup.py
+
 
 ### Scripts and Functionalities
 1. **prepare_datasets.py**  
@@ -107,7 +180,7 @@ Performs hyperparameter tuning for:
 
 This script is optional. If not used, hyperparameters can be manually specified in the configuration file. When run, it finds the optimal hyperparameters and saves them to the configuration file automatically.
 
-## Results (In Progress)
+## Results
 This project is still under development, and results are currently available only for the validation set.
 <p align="center">
     <img src="results/f1_score_val_train_curves.png" alt="F1 Score Curves for Training and Validation">
@@ -137,6 +210,8 @@ Some hyperparameters could not be tuned with `keras_tuner` and were determined t
    - **Augmentation and Class Weights**: Enabled for the minority class, ensuring it had sufficient representation during training.
 
 ## Future Work
-- **Final Testing**: Complete the training and evaluation on the test set.
-- **Further Tuning**: Experiment with additional architectures and more extensive hyperparameter tuning.
+- **Alternative Architectures**: Consider exploring other backbones (e.g., **ResNet**, **EfficientNet**) or modifying the current **ConvNeXtTiny** to further improve feature extraction and overall performance.
+- **Further Tuning**: Experiment with additional architectures and more extensive hyperparameter tuning.  
 - **Optimization**: Improve data preprocessing and model training pipelines for scalability and efficiency.
+
+  
